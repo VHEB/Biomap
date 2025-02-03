@@ -1,0 +1,11 @@
+# Ignorar a máquina virtual
+.venv/
+
+# Arquivos do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Configurações do ambiente
+.env
