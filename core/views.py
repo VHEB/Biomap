@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import CadastroUsuarioForm, CadastroAnimalForm
 
+def index(request):
+    return render(request, 'index.html')
+
 def cadastro_usuario(request):
     if request.method == 'POST':
         form = CadastroUsuarioForm(request.POST)
