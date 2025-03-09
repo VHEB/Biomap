@@ -1,9 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from .forms import CadastroUsuarioForm, CadastroAnimalForm
 
 def index(request):
     return render(request, 'index.html')
+
+@login_required
+def perfil_usuario(request):
+    # Como o usuário está autenticado, request.user contém suas informações.
+    return render(request, 'perfil_usuario.html', {'usuario': request.user})
 
 def cadastro_usuario(request):
     if request.method == 'POST':
@@ -36,3 +42,4 @@ def cadastro_animal(request):
         form = CadastroAnimalForm()
     
     return render(request, 'cadastro_animal.html', {'form': form})
+

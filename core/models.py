@@ -10,21 +10,9 @@ class Usuario(AbstractUser):
         ('instituicao', 'Instituição de Educação')
     ])
 
-    def cadastrar(self):
-        pass  # Implementar lógica
-
-    def recuperar_senha(self):
-        pass  # Implementar lógica
-
-    def excluir_conta(self):
-        pass  # Implementar lógica
 
 class UsuarioComum(Usuario):
-    def pesquisar_animais(self):
-        pass
-
-    def visualizar_resultados(self):
-        pass
+    pass
 
 class InstituicaoEducacao(Usuario):
     nome = models.CharField(max_length=255)
@@ -33,8 +21,7 @@ class InstituicaoEducacao(Usuario):
     contato = models.CharField(max_length=50)
     website = models.URLField()
 
-    def validar_dados(self):
-        pass
+    
 
 class Pesquisador(Usuario):
     data_nascimento = models.DateField()
@@ -44,14 +31,7 @@ class Pesquisador(Usuario):
     # Associação opcional com Instituição:
     instituicao = models.ForeignKey(InstituicaoEducacao, on_delete=models.SET_NULL, null=True, blank=True, related_name="pesquisadores")
 
-    def cadastrar_animal(self, animal):
-        pass
 
-    def alterar_informacoes_animal(self, animal):
-        pass
-
-    def validar_dados(self):
-        pass
 
 class Animal(models.Model):
     reino = models.CharField(max_length=100)
@@ -89,8 +69,3 @@ class Animal(models.Model):
     # Relação de cadastro: tanto pesquisadores quanto instituições são usuários.
     cadastrado_por = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="animais")
 
-    def cadastrar(self):
-        pass
-
-    def alterar(self):
-        pass
