@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import CadastroUsuarioForm, CadastroAnimalForm
+from .forms import CadastroUsuarioForm, CadastroAnimalForm, EditarPerfilForm
 
 def index(request):
     return render(request, 'index.html')
@@ -43,3 +43,17 @@ def cadastro_animal(request):
     
     return render(request, 'cadastro_animal.html', {'form': form})
 
+@login_required
+def editar_usuario(request):
+    if request.method == 'POST':
+        form = EditarPerfilForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Dados atualizados com sucesso!")
+            return redirect('perfil_usuario')
+        else:
+            messages.error(request, "Houve um problema ao atualizar os dados.")
+    else:
+        form = EditarPerfilForm(instance=request.user)
+    
+    return render(request, 'editar_usuario.html', {'form': form})

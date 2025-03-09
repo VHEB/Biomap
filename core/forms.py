@@ -29,6 +29,12 @@ class CadastroUsuarioForm(UserCreationForm):
         return cleaned_data
 
 
+class EditarPerfilForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        fields = ['username', 'email']
+
+
 class CadastroAnimalForm(forms.ModelForm):
     class Meta:
         model = Animal
