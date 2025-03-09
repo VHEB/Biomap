@@ -14,6 +14,10 @@
     <!-- Botão para editar dados -->
     <button onclick="window.location.href='{% url 'editar_usuario' %}'">Editar Dados</button>
     <!-- Botão para sair -->
-    <button onclick="window.location.href='{% url 'logout' %}'">Sair</button>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Sair</button>
+    </form>
+    
 </body>
 </html>
