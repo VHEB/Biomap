@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Usuário</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
     <h2>Cadastro de Usuário</h2>
     
     {% if messages %}
@@ -23,5 +18,6 @@
     </form>
 
     <p>Já tem uma conta? <a href="{% url 'login' %}">Faça login</a></p>
-</body>
-</html>
+
+
+{% endblock %}
