@@ -43,7 +43,7 @@ class Animal(models.Model):
     nome_cientifico = models.CharField(max_length=255)
     nome_cientifico_anterior = models.CharField(max_length=255, blank=True, null=True)
     autor = models.CharField(max_length=255)
-    nome_comum = models.CharField(max_length=255)
+    nome_comum = models.TextField()
     grupo = models.CharField(max_length=100)
     mes_ano_avaliacao = models.CharField(max_length=50)
     categoria = models.CharField(max_length=100)
@@ -52,20 +52,19 @@ class Animal(models.Model):
     justificativa = models.TextField()
     endemica_brasil = models.BooleanField(default=False)
     consta_lista_nacional_oficial = models.BooleanField(default=False)
-    estado = models.CharField(max_length=100)
+    estado = models.TextField() # Alterado para TextField
     regiao = models.CharField(max_length=100)
     bioma = models.CharField(max_length=100)
-    bacia_hidrografica = models.CharField(max_length=100)
-    uc_federal = models.CharField(max_length=100)
-    uc_estadual = models.CharField(max_length=100)
-    rppn = models.CharField(max_length=100)
+    bacia_hidrografica = models.TextField() # Alterado para TextField
+    uc_federal = models.TextField() # Alterado para TextField
+    uc_estadual = models.TextField() # Alterado para TextField
+    rppn = models.TextField() # Alterado para TextField
     migratoria = models.BooleanField(default=False)
     tendencia_populacional = models.CharField(max_length=100)
-    ameaca = models.CharField(max_length=100)
-    uso = models.CharField(max_length=100)
+    ameaca = models.TextField() # Alterado para TextField
+    uso = models.TextField() # Alterado para TextField
     acao_conservacao = models.TextField()
     plano_acao = models.TextField()
     listas_convencoes = models.TextField()
     # Relação de cadastro: tanto pesquisadores quanto instituições são usuários.
-    cadastrado_por = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="animais")
-
+    cadastrado_por = models.ForeignKey('core.Usuario', on_delete=models.CASCADE, related_name="animais")
