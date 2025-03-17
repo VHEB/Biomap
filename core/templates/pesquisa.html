@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Pesquisar Animais</h2>
+    <form method="GET" action="{% url 'resultado_pesquisa' %}">
+        <input type="text" name="q" placeholder="Digite o nome do animal..." class="form-control">
+        <button type="submit" class="btn btn-primary mt-2">Pesquisar</button>
+    </form>
+</div>
+{% endblock %}

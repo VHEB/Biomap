@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import CadastroUsuarioForm, CadastroAnimalForm, EditarPerfilForm
+from .models import Animal
 
 def index(request):
     return render(request, 'index.html')
@@ -57,3 +58,15 @@ def editar_usuario(request):
         form = EditarPerfilForm(instance=request.user)
     
     return render(request, 'editar_usuario.html', {'form': form})
+
+
+def pesquisa_animal(request):
+    return render(request, "pesquisa.html")
+
+def resultado_pesquisa(request):
+    query = request.GET.get("q")
+    if query:
+        animais = Animal.objects.filter(nome_cientifico__icontains=query)
+    else:
+        animais = Animal.objects.none()
+    return render(request, "resultado_pesquisa.html", {"animais": animais})
