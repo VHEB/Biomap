@@ -1,11 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <h2>Pesquisar Animais</h2>
-    <form method="GET" action="{% url 'resultado_pesquisa' %}">
-        <input type="text" name="q" placeholder="Digite o nome do animal..." class="form-control">
-        <button type="submit" class="btn btn-primary mt-2">Pesquisar</button>
-    </form>
+<div class="container mt-4">
+    <h2>Pesquisa de Animais</h2>
+    <input type="text" id="search-box" class="form-control" placeholder="Digite o nome do animal...">
+    <ul id="suggestions" class="list-group mt-2"></ul>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchBox = document.getElementById("search-box");
+        const suggestionsList = document.getElementById("suggestions");
+
+        searchBox.addEventListener("input", function () {
+            const query = searchBox.value.trim();
+
+            if (query.length < 2) {
+                suggestionsList.innerHTML = ""; // Limpa sugestões se digitar pouco
+                return;
+            }
+
+            fetch(`/autocomplete/?q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsList.innerHTML = "";
+                    data.forEach(item => {
+                        const li = document.createElement("li");
+                        li.textContent = item;
+                        li.classList.add("list-group-item");
+                        li.addEventListener("click", function () {
+                            searchBox.value = item;
+                            suggestionsList.innerHTML = ""; // Limpa a lista após a seleção
+                        });
+                        suggestionsList.appendChild(li);
+                    });
+                });
+        });
+    });
+</script>
 {% endblock %}

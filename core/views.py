@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import CadastroUsuarioForm, CadastroAnimalForm, EditarPerfilForm
@@ -62,6 +63,16 @@ def editar_usuario(request):
 
 def pesquisa_animal(request):
     return render(request, "pesquisa.html")
+
+def animal_suggestions(request):
+    query = request.GET.get("q", "").strip()
+    if query:
+        animais = Animal.objects.filter(nome_cientifico__icontains=query)[:10]  # Limita a 10 sugestões
+        suggestions = list(animais.values_list("nome_cientifico", flat=True))
+    else:
+        suggestions = []
+    
+    return JsonResponse(suggestions, safe=False)
 
 def resultado_pesquisa(request):
     query = request.GET.get("q")
