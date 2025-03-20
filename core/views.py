@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import CadastroUsuarioForm, CadastroAnimalForm, EditarPerfilForm
 from .models import Animal
+from django.db.models import Q
 
 def index(request):
     return render(request, 'index.html')
@@ -64,20 +65,26 @@ def editar_usuario(request):
 def pesquisa_animal(request):
     return render(request, "pesquisa.html")
 
+
 def animal_suggestions(request):
     query = request.GET.get("q", "").strip()
+    
     if query:
-        animais = Animal.objects.filter(nome_cientifico__icontains=query)[:10]  # Limita a 10 sugestões
+        animais = Animal.objects.filter(
+            Q(nome_cientifico__icontains=query) | Q(nome_comum__icontains=query)
+        )[:10]  # Limita a 10 sugestões
+
         suggestions = list(animais.values_list("nome_cientifico", flat=True))
+        if not suggestions:
+            suggestions = ["Nenhum resultado encontrado"]
     else:
         suggestions = []
     
     return JsonResponse(suggestions, safe=False)
 
-def resultado_pesquisa(request):
-    query = request.GET.get("q")
-    if query:
-        animais = Animal.objects.filter(nome_cientifico__icontains=query)
-    else:
-        animais = Animal.objects.none()
-    return render(request, "resultado_pesquisa.html", {"animais": animais})
+
+def resultado_pesquisa(request, nome_cientifico):
+    # Buscar pelo nome científico (ou nome comum)
+    animal = get_object_or_404(Animal, nome_cientifico=nome_cientifico)
+    
+    return render(request, "resultado_pesquisa.html", {"animal": animal})

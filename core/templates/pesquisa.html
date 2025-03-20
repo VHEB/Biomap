@@ -16,7 +16,7 @@
             const query = searchBox.value.trim();
 
             if (query.length < 2) {
-                suggestionsList.innerHTML = ""; // Limpa sugestões se digitar pouco
+                suggestionsList.innerHTML = "";
                 return;
             }
 
@@ -24,17 +24,26 @@
                 .then(response => response.json())
                 .then(data => {
                     suggestionsList.innerHTML = "";
+
+                    if (data.length === 0 || data[0] === "Nenhum resultado encontrado") {
+                        const li = document.createElement("li");
+                        li.textContent = "Nenhum resultado encontrado";
+                        li.classList.add("list-group-item", "text-danger", "fw-bold");
+                        suggestionsList.appendChild(li);
+                        return;
+                    }
+
                     data.forEach(item => {
                         const li = document.createElement("li");
                         li.textContent = item;
                         li.classList.add("list-group-item");
                         li.addEventListener("click", function () {
-                            searchBox.value = item;
-                            suggestionsList.innerHTML = ""; // Limpa a lista após a seleção
+                            window.location.href = `/resultado/${encodeURIComponent(item)}/`;
                         });
                         suggestionsList.appendChild(li);
                     });
-                });
+                })
+                .catch(error => console.error("Erro na requisição:", error));
         });
     });
 </script>
