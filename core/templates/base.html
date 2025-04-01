@@ -6,22 +6,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}BioMap{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="icon" href="{% static 'img/logo.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/buttonSocial.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/fonts-icones.css' %}">
+    <link rel="icon" href="{% static 'ico/logo.ico' %}" type="image/x-icon">
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">BioMap</a>
-        </div>
-    </nav>
+    <div class="container">
+        <img src="{% static 'img/logo.png' %}" alt="Logo BioMap" class="logo">
+        <nav>
+            <ul class="menu">
+                <li><a href="">Início</a></li>
+                <li><a href="">Sobre</a></li>
+                <li><a href="">Contato</a></li>
+                <li><a href="">Perfil</a></li>
+            </ul>
+            <div class="menu-mobile">&#9776;</div>
+        </nav>
+    </div>
     
     <div class="container mt-4">
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </div>
 
-    <footer class="text-center mt-4">
-        <p>&copy; 2025 BioMap - Todos os direitos reservados.</p>
+    <footer class="main_footer">
+        <div class="container">
+            <div class="footer_social">
+                <h3>Nos siga nas redes sociais</h3>
+                <nav class="btn_social">
+                    <ul>
+                        <li><a href=" https://wa.me/15998109762" target="_blank" title="WhatsApp"><i class="icon icon-whatsapp"></i></a></li>
+                        <li><a href="https://www.instagram.com/vitor_heb/" target="_blank" title="Instagram"><i class="icon icon-instagram"></i></a></li>
+                        <li><a href="https://www.linkedin.com/in/vitor-heb/" target="_blank" title="LinkedIn"><i class="icon icon-linkedin"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="footer_center">
+                <img src="{% static 'img/logo.png' %}" alt="Logo BioMap">
+                <p class="footer_slogan">"Levando conhecimento para todos os lugares."</p>
+                <p class="footer_mission">Acreditamos que o conhecimento leva à conscientização!</p>
+            </div>
+            <div class="footer_menu">
+                <h3>Links Rápidos</h3>
+                <ul>
+                    <li><a href="">Início</a></li>
+                    <li><a href="">Sobre</a></li>
+                    <li><a href="">Contato</a></li>
+                    <li><a href="">Perfil</a></li>
+                </ul>
+            </div>
+        </div>
+        <p class="footer_text">&copy; 2025 BioMap - Todos os direitos reservados.</p>
     </footer>
 </body>
 </html>

@@ -59,3 +59,178 @@ small{
     font-size: var(--font-size-small);
     color: var(--tertiary-color);
 }
+
+
+/* HEADER FIXO */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--primary-color);
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+/* CONTAINER FLEX */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* LOGO */
+.logo {
+    height: 50px;
+}
+
+/* MENU DESKTOP */
+.menu {
+    list-style: none;
+    display: flex;
+}
+
+.menu li {
+    margin-left: 15px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: var(--background-color);
+    background-color: var(--secondary-color);
+    padding: 12px 20px;
+    border-radius: 5px;
+    display: block;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    background-color: var(--tertiary-color);
+}
+
+/* MENU MOBILE */
+.menu-mobile {
+    display: none;
+    font-size: 30px;
+    color: var(--background-color);
+    cursor: pointer;
+}
+
+
+
+
+
+/* footer */
+.main_footer {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+    z-index: 1000;
+}
+
+.footer_text {
+    text-align: center;
+    font-size: 0.9em;
+    color: var(--background-color);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+.footer_social {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.footer_social h3 {
+    font-size: 1.2em;
+    color: var(--secondary-color);
+    margin-bottom: 8px;
+}
+
+
+.footer_center {
+    text-align: center;
+    max-width: 38rem;
+    margin-bottom: 2rem;
+}
+
+.footer_center img {
+    width: 13rem;
+    margin-bottom: 10px;
+}
+
+/* Links do Menu (Direita) */
+.footer_menu {
+    text-align: right;
+}
+
+.footer_menu h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: var(--secondary-color);
+}
+
+.footer_menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer_menu ul li {
+    margin-bottom: 5px;
+}
+
+.footer_menu ul li a {
+    color: var(--background-color);
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.footer_menu ul li a:hover {
+    color: var(--secondary-color);
+}
+
+/* Estilos do primeiro texto */
+.footer_slogan {
+    font-size: 1em;
+    font-style: italic;
+    color: var(--secondary-color);
+    word-wrap: break-word;
+    line-height: 1.3;
+    text-align: center;
+}
+
+/* Estilos do segundo texto */
+.footer_mission {
+    font-size: 1.1em;
+    font-style: italic;
+    color: var(--background-color);
+    word-wrap: break-word;
+    line-height: 1.3;
+    margin-top: 8px;
+    text-align: center;
+}
+
+.footer_logo img {
+    width: 100px;
+    margin-bottom: 10px;
+}
+
+.footer_logo p {
+    font-size: 0.9em;
+    font-style: italic;
+    color: var(--background-color);
+}
