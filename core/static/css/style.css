@@ -131,7 +131,7 @@ header {
 .main_footer {
     background-color: var(--primary-color);
     color: var(--background-color);
-    display: flex;
+    display: fixed;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
@@ -165,11 +165,11 @@ header {
 .footer_center {
     text-align: center;
     max-width: 38rem;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
 }
 
 .footer_center img {
-    width: 13rem;
+    width: 5rem;
     margin-bottom: 10px;
 }
 
