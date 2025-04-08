@@ -1,19 +1,5 @@
-:root{
-    --primary-color: #1E5544;
-    --secondary-color: #E9B436;
-    --tertiary-color: rgb(230, 125, 55);
-    --alert-color: #D32F2F;
-    --font-color: #0A0A0A;
-    --background-color: #FEFEFE;
-    --font-size-h1: 2.5rem; /* 40px */
-    --font-size-h2: 2rem;   /* 32px */
-    --font-size-h3: 1.5rem; /* 24px */
-    --font-size-h4: 1.2rem; /* 19.2px */
-    --font-size-h5: 1rem;   /* 16px */
-    --font-size-h6: 0.8rem; /* 12.8px */
-    --font-size-p: 1rem;    /* 16px */
-    --font-size-small: 0.8rem; /* 12.8px */
-}
+@import url('/core/static/css/style.css');
+
 
 .btn_social { 
 	display:flex; 

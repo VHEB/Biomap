@@ -79,13 +79,31 @@ header {
 
 /* CONTAINER FLEX */
 .container {
-    width: 100%;
     max-width: 1200px;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
-
+section {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: #0A0A0A;
+}
+/* BARRA DE PESQUISA */
+#search-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 20px;
+    border-radius: 8px;
+    width: 20rem;
+    border-color: #1E5544;
+    background-color: var(--background-color);
+    padding: 10px;
+}
 /* LOGO */
 .logo {
     height: 50px;
@@ -124,7 +142,14 @@ header {
     cursor: pointer;
 }
 
-
+/* Barra de pesquisa */
+#search-box input{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 20px;
+    border: #1E5544 solid 2px;
+}
 
 
 
@@ -132,12 +157,12 @@ header {
 .main_footer {
     background-color: var(--primary-color);
     color: var(--background-color);
-    display: fixed;
+    display: relative;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
     width: 100%;
-    position: relative;
+    position: absolute;
     bottom: 0;
     z-index: 1000;
 }
