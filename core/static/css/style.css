@@ -8,7 +8,8 @@
 :root{
     --primary-color: #1E5544;
     --secondary-color: #E9B436;
-    --tertiary-color: #D32F2F;
+    --tertiary-color: rgb(230, 125, 55);
+    --alert-color: #D32F2F;
     --font-color: #0A0A0A;
     --background-color: #FEFEFE;
     --font-size-h1: 2.5rem; /* 40px */
