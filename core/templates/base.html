@@ -11,7 +11,7 @@
     <link rel="icon" href="{% static 'ico/logo.ico' %}" type="image/x-icon">
 </head>
 <body>
-    <div class="container">
+    <header>
         <img src="{% static 'img/logo.png' %}" alt="Logo BioMap" class="logo">
         <nav>
             <ul class="menu">
@@ -22,9 +22,9 @@
             </ul>
             <div class="menu-mobile">&#9776;</div>
         </nav>
-    </div>
+    </header>
     
-    <div class="container mt-4">
+    <div class="container">
         {% block content %}
         {% endblock %}
     </div>
