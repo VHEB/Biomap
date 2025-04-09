@@ -83,6 +83,7 @@ header {
     width: 100%;
     display: flex;
     align-items: center;
+    text-align: center;
     justify-content: space-between;
 }
 section {
@@ -92,18 +93,20 @@ section {
     padding: 20px;
     box-shadow: #0A0A0A;
 }
+
 /* BARRA DE PESQUISA */
 #search-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 20px;
-    border-radius: 8px;
-    width: 20rem;
-    border-color: #1E5544;
-    background-color: var(--background-color);
-    padding: 10px;
+    display: block;
+    width: 100%;
+    max-width: 500px;       /* Limita a largura máxima */
+    margin: 20px auto;      /* Centraliza horizontalmente com margem vertical */
+    padding: 10px 15px;     
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
 /* LOGO */
 .logo {
     height: 80px;
@@ -145,24 +148,32 @@ section {
 
 /* Estilo para a lista de sugestões */
 #suggestions {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
-    margin-top: 10px;
+    margin: 10px auto;
     max-width: 500px;
-    background-color: #f8f9fa;
+    background-color: #f8f9face;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-/* Estilo para cada item */
 #suggestions li {
     padding: 10px 15px;
     border-bottom: 1px solid #ddd;
     cursor: pointer;
-    background-color: var(--secondary-color); /* amarelo */
+    background-color: var(--secondary-color); /* Amarelo */
     color: var(--font-color);
     transition: background-color 0.3s, color 0.3s;
     font-weight: 500;
+}
+
+#suggestions li:last-child {
+    border-bottom: none;
+}
+
+#suggestions li:hover {
+    background-color: var(--tertiary-color); /* Vermelho no hover */
+    color: white;
 }
 
 /* Último item sem borda */
