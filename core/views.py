@@ -84,7 +84,7 @@ def animal_suggestions(request):
 
 
 def resultado_pesquisa(request, nome_cientifico):
-    # Buscar pelo nome científico (ou nome comum)
-    animal = get_object_or_404(Animal, nome_cientifico=nome_cientifico)
-    
-    return render(request, "resultado_pesquisa.html", {"animal": animal})
+    animais = Animal.objects.filter(
+        Q(nome_cientifico__iexact=nome_cientifico) | Q(nome_comum__icontains=nome_cientifico)
+    )
+    return render(request, "resultado_pesquisa.html", {"animais": animais, "termo": nome_cientifico})

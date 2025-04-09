@@ -2,25 +2,32 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Detalhes do Animal</h2>
+    <h2>Resultados da Pesquisa</h2>
     
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">{{ animal.nome_cientifico }}</h4>
-            <h5 class="card-subtitle mb-2 text-muted">{{ animal.nome_comum }}</h5>
-            <p><strong>Reino:</strong> {{ animal.reino }}</p>
-            <p><strong>Filo:</strong> {{ animal.filo }}</p>
-            <p><strong>Classe:</strong> {{ animal.classe }}</p>
-            <p><strong>Ordem:</strong> {{ animal.ordem }}</p>
-            <p><strong>Família:</strong> {{ animal.familia }}</p>
-            <p><strong>Gênero:</strong> {{ animal.genero }}</p>
-            <p><strong>Categoria:</strong> {{ animal.categoria }}</p>
-            <p><strong>Endêmico do Brasil:</strong> {{ animal.endemica_brasil|yesno:"Sim,Não" }}</p>
-            <p><strong>Região:</strong> {{ animal.regiao }}</p>
-            <p><strong>Bioma:</strong> {{ animal.bioma }}</p>
-            <p><strong>Justificativa:</strong> {{ animal.justificativa }}</p>
-            <a href="{% url 'pesquisa' %}" class="btn btn-primary">Nova Pesquisa</a>
-        </div>
-    </div>
+    {% if animais %}
+        {% for animal in animais %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h4 class="card-title">{{ animal.nome_cientifico }}</h4>
+                    <h5 class="card-subtitle mb-2 text-muted">{{ animal.nome_comum }}</h5>
+                    <p><strong>Reino:</strong> {{ animal.reino }}</p>
+                    <p><strong>Filo:</strong> {{ animal.filo }}</p>
+                    <p><strong>Classe:</strong> {{ animal.classe }}</p>
+                    <p><strong>Ordem:</strong> {{ animal.ordem }}</p>
+                    <p><strong>Família:</strong> {{ animal.familia }}</p>
+                    <p><strong>Gênero:</strong> {{ animal.genero }}</p>
+                    <p><strong>Categoria:</strong> {{ animal.categoria }}</p>
+                    <p><strong>Endêmico do Brasil:</strong> {{ animal.endemica_brasil|yesno:"Sim,Não" }}</p>
+                    <p><strong>Região:</strong> {{ animal.regiao }}</p>
+                    <p><strong>Bioma:</strong> {{ animal.bioma }}</p>
+                    <p><strong>Justificativa:</strong> {{ animal.justificativa }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Nenhum animal encontrado.</p>
+    {% endif %}
+    
+    <a href="{% url 'pesquisa' %}" class="btn btn-primary">Nova Pesquisa</a>
 </div>
 {% endblock %}
