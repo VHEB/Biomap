@@ -106,7 +106,7 @@ section {
 }
 /* LOGO */
 .logo {
-    height: 50px;
+    height: 80px;
 }
 
 /* MENU DESKTOP */
@@ -142,14 +142,47 @@ section {
     cursor: pointer;
 }
 
-/* Barra de pesquisa */
-#search-box input{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 20px;
-    border: #1E5544 solid 2px;
+
+/* Estilo para a lista de sugestões */
+#suggestions {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+    max-width: 500px;
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
+
+/* Estilo para cada item */
+#suggestions li {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    background-color: var(--secondary-color); /* amarelo */
+    color: var(--font-color);
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 500;
+}
+
+/* Último item sem borda */
+#suggestions li:last-child {
+    border-bottom: none;
+}
+
+/* Hover dos itens */
+#suggestions li:hover {
+    background-color: var(--tertiary-color); /* vermelho */
+    color: white;
+}
+
+/* Estilo do aviso de “Nenhum resultado” */
+#suggestions .text-danger {
+    color: var(--tertiary-color);
+    font-weight: bold;
+    background-color: #fdf2f2;
+}
+
 
 
 
