@@ -88,3 +88,9 @@ def resultado_pesquisa(request, nome_cientifico):
         Q(nome_cientifico__iexact=nome_cientifico) | Q(nome_comum__icontains=nome_cientifico)
     )
     return render(request, "resultado_pesquisa.html", {"animais": animais, "termo": nome_cientifico})
+
+def sobre(request):
+    return render(request, "sobre.html")
+
+def contato(request):
+    return render(request, "contato.html")

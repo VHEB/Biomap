@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
-from .views import index, cadastro_usuario, cadastro_animal, perfil_usuario, editar_usuario, pesquisa_animal, resultado_pesquisa, animal_suggestions
+from .views import index, cadastro_usuario, cadastro_animal, perfil_usuario, editar_usuario, pesquisa_animal, resultado_pesquisa, animal_suggestions, sobre, contato
 
 urlpatterns = [
     path('', index, name='index'),
@@ -13,4 +13,6 @@ urlpatterns = [
     path("pesquisa/", pesquisa_animal, name="pesquisa"),
     path("autocomplete/", animal_suggestions, name="animal-autocomplete"),
     path("resultado/<str:nome_cientifico>/", resultado_pesquisa, name="resultado_pesquisa"),
+    path("sobre/", sobre, name="sobre"),
+    path("contato/", contato, name="contato"),
 ]
