@@ -1,4 +1,5 @@
-@import url('./style.css');
+@import url('/core/static/css/style.css');
+
 
 .btn_social { 
 	display:flex; 
@@ -18,7 +19,7 @@
 .btn_social ul li  { 
 
 	position:relative; 
-	background: var(--secundary-color); 
+	background: var(--secondary-color); 
 	list-style:none; 
 	float:left; 
 	margin:5px; 
@@ -50,14 +51,14 @@
 	height:100%; 
 	top:90%; 
 	left:0; 
-	background:var(--terciary-color); 
+	background:var(--tertiary-color); 
 	z-index:-1; 
 	transform: scale(1); 
 	transition:.4s; 
 }
 
 .btn_social ul li:hover::before { transition:0.4s; top:0%; }
-.btn_social ul li a:hover       { color:var(--terciary-color); }
+.btn_social ul li a:hover       { color:var(--primary-color); }
 
 /*Começa o Responsivo*/
 

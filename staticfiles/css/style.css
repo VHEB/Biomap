@@ -8,7 +8,8 @@
 :root{
     --primary-color: #1E5544;
     --secondary-color: #E9B436;
-    --tertiary-color: #D32F2F;
+    --tertiary-color: rgb(230, 125, 55);
+    --alert-color: #D32F2F;
     --font-color: #0A0A0A;
     --background-color: #FEFEFE;
     --font-size-h1: 2.5rem; /* 40px */
@@ -34,6 +35,7 @@ h1{
 h2{
     font-size: var(--font-size-h2);
     color: var(--primary-color);
+    margin: 1.5rem 0;
 }
 h3{
     font-size: var(--font-size-h3);
@@ -42,6 +44,7 @@ h3{
 h4{
     font-size: var(--font-size-h4);
     color: var(--font-color);
+    margin: 1rem 0;
 }
 h5{
     font-size: var(--font-size-h5);
@@ -67,10 +70,10 @@ header {
     top: 0;
     left: 0;
     width: 100%;
+    height: 50px;
     background-color: var(--primary-color);
     padding: 15px 30px;
     display: flex;
-    align-items: center;
     justify-content: center;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
@@ -78,16 +81,37 @@ header {
 
 /* CONTAINER FLEX */
 .container {
-    width: 100%;
     max-width: 1200px;
+    width: 100%;
     display: flex;
     align-items: center;
+    text-align: center;
     justify-content: space-between;
+}
+section {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: #0A0A0A;
+}
+
+/* BARRA DE PESQUISA */
+#search-box {
+    display: block;
+    width: 100%;
+    max-width: 500px;       /* Limita a largura máxima */
+    margin: 20px auto;      /* Centraliza horizontalmente com margem vertical */
+    padding: 10px 15px;     
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* LOGO */
 .logo {
-    height: 50px;
+    height: 80px;
 }
 
 /* MENU DESKTOP */
@@ -124,21 +148,85 @@ header {
 }
 
 
+/* Estilo para a lista de sugestões */
+#suggestions {
+    list-style: none;
+    padding: 0;
+    margin: 10px auto;
+    max-width: 500px;
+    background-color: #f8f9face;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
 
+#suggestions li {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    background-color: var(--secondary-color); /* Amarelo */
+    color: var(--font-color);
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 500;
+}
+
+#suggestions li:last-child {
+    border-bottom: none;
+}
+
+#suggestions li:hover {
+    background-color: var(--tertiary-color); /* Vermelho no hover */
+    color: white;
+}
+
+/* Último item sem borda */
+#suggestions li:last-child {
+    border-bottom: none;
+}
+
+/* Hover dos itens */
+#suggestions li:hover {
+    background-color: var(--tertiary-color); /* vermelho */
+    color: white;
+}
+
+/* Estilo do aviso de “Nenhum resultado” */
+#suggestions .text-danger {
+    color: var(--tertiary-color);
+    font-weight: bold;
+    background-color: #fdf2f2;
+}
+
+.btn-search {
+    background-color: var(--secondary-color);
+    color: var(--background-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+.btn-search:hover {
+    background-color: var(--tertiary-color);
+    color: white;
+}
+.btn-search a {
+    text-decoration: none;
+    color: var(--background-color);
+}
 
 
 /* footer */
 .main_footer {
     background-color: var(--primary-color);
     color: var(--background-color);
-    display: flex;
+    display: relative;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
     width: 100%;
-    position: relative;
     bottom: 0;
-    z-index: 1000;
+    
 }
 
 .footer_text {
@@ -165,11 +253,11 @@ header {
 .footer_center {
     text-align: center;
     max-width: 38rem;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
 }
 
 .footer_center img {
-    width: 13rem;
+    width: 5rem;
     margin-bottom: 10px;
 }
 
