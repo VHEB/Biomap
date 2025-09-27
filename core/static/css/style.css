@@ -220,7 +220,7 @@ section {
 .main_footer {
     background-color: var(--primary-color);
     color: var(--background-color);
-    display: relative;
+    display: fixed;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
