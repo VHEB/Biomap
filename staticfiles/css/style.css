@@ -234,9 +234,7 @@ section {
     text-align: center;
     font-size: 0.9em;
     color: var(--background-color);
-    width: 100%;
-    position: absolute;
-    bottom: 0;
+    margin-top: 20px;
 }
 
 .footer_social {

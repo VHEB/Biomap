@@ -1,36 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div>
+<section>
     <h1>Resultados da Pesquisa</h1>
-    
+
     {% if animais %}
         {% for animal in animais %}
-            <div>
-                <div>
-                    <h2>{{ animal.nome_cientifico }}</h2>
-                    <h3>{{ animal.nome_comum }}</h3>
-                    <h4>Reino:</h4> <p> {{ animal.reino }} </p>
-                    <h4>Filo:</h4> <p>{{ animal.filo }}</p>
-                    <h4>Classe:</h4> <p>{{ animal.classe }}</p>
-                    <h4>Ordem:</h4> <p>{{ animal.ordem }}</p>
-                    <h4>Família:</h4> <p>{{ animal.familia }}</p>
-                    <h4>Gênero:</h4> <p>{{ animal.genero }}</p>
-                    <h4>Categoria:</h4> <p>{{ animal.categoria }}</p>
-                    <h4>Endêmico do Brasil:</h4> <p>{{ animal.endemica_brasil|yesno:"Sim,Não" }}</p>
-                    <h4>Região:</h4> <p>{{ animal.regiao }}</p>
-                    <h4>Bioma:</h4> <p>{{ animal.bioma }}</p>
-                    <h4>Justificativa:</h4> <p>{{ animal.justificativa }}</p>
-                </div>
+            <div class="animal-card">
+                <h2>{{ animal.nome_cientifico }}</h2>
+                <h3>{{ animal.nome_comum }}</h3>
+                <p><strong>Reino:</strong> {{ animal.reino }}</p>
+                <p><strong>Filo:</strong> {{ animal.filo }}</p>
+                <p><strong>Classe:</strong> {{ animal.classe }}</p>
+                <p><strong>Ordem:</strong> {{ animal.ordem }}</p>
+                <p><strong>Família:</strong> {{ animal.familia }}</p>
+                <p><strong>Gênero:</strong> {{ animal.genero }}</p>
+                <p><strong>Categoria:</strong> {{ animal.categoria }}</p>
+                <p><strong>Endêmico do Brasil:</strong> {{ animal.endemica_brasil|yesno:"Sim,Não" }}</p>
+                <p><strong>Região:</strong> {{ animal.regiao }}</p>
+                <p><strong>Bioma:</strong> {{ animal.bioma }}</p>
+                <p><strong>Justificativa:</strong> {{ animal.justificativa }}</p>
             </div>
         {% endfor %}
     {% else %}
         <p>Nenhum animal encontrado.</p>
     {% endif %}
-    <br>
+
     <br>
     <a href="{% url 'pesquisa' %}" class="btn-search">Nova Pesquisa</a>
-    <br>
-    <br>
-</div>
+</section>
+
+<style>
+.animal-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.animal-card h2 {
+    color: var(--primary-color);
+}
+.animal-card h3 {
+    color: var(--secondary-color);
+}
+</style>
 {% endblock %}

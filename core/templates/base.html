@@ -54,7 +54,6 @@
                 <img src="{% static 'img/logo.png' %}" alt="Logo BioMap">
                 <p class="footer_slogan">"Levando conhecimento para todos os lugares."</p>
                 <p class="footer_mission">Acreditamos que o conhecimento leva à conscientização!</p>
-                <p class="footer_text">&copy; 2025 BioMap - Todos os direitos reservados.</p>
             </div>
             <div class="footer_menu">
                 <h3>Links Rápidos</h3>
@@ -66,38 +65,39 @@
 
                 </ul>
             </div>
+            <p class="footer_text">&copy; 2025 BioMap - Todos os direitos reservados.</p>
         </div>
     </footer>
     {% if messages %}
-<div id="toast-container">
-  {% for message in messages %}
-    <div class="toast">{{ message }}</div>
-  {% endfor %}
-</div>
-<script>
-  const toast = document.getElementById("toast-container");
-  setTimeout(() => toast.style.display = "none", 4000);
-</script>
-<style>
-  #toast-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9999;
-  }
-  .toast {
-    background-color: rgb(230, 125, 55);
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 6px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
-    font-weight: bold;
-    animation: fadeIn 0.5s;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+        <div id="toast-container">
+    {% for message in messages %}
+        <div class="toast">{{ message }}</div>
+    {% endfor %}
+    </div>
+    <script>
+    const toast = document.getElementById("toast-container");
+    setTimeout(() => toast.style.display = "none", 4000);
+    </script>
+    <style>
+    #toast-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+    }
+    .toast {
+        background-color: rgb(230, 125, 55);
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 6px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        font-weight: bold;
+        animation: fadeIn 0.5s;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 </style>
 {% endif %}
 </body>

@@ -1,13 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <section>
-        <h1>Pesquisa de Animais</h1>
-        <input type="text" id="search-box" placeholder="Digite o nome do animal...">
-        <ul id="suggestions" class="list-group mt-2"></ul>
-    </section>
-</div>
+<section>
+    <h1>Pesquisa de Animais</h1>
+    <input type="text" id="search-box" placeholder="Digite o nome do animal...">
+    <ul id="suggestions" class="list-group mt-2"></ul>
+</section>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -39,7 +37,10 @@
                         const li = document.createElement("li");
                         li.textContent = item;
                         li.classList.add("list-group-item");
-                        li.addEventListener("click", function () {
+                        li.addEventListener("click", function (e) {
+                            e.preventDefault();
+                            // Redireciona para a página de resultados com o item selecionado
+                            li.style.pointerEvents = 'none'; // Desabilita múltiplos cliques
                             window.location.href = `/resultado/${encodeURIComponent(item)}/`;
                         });
                         suggestionsList.appendChild(li);

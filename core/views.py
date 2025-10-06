@@ -86,9 +86,15 @@ def animal_suggestions(request):
 
 def resultado_pesquisa(request, nome_cientifico):
     animais = Animal.objects.filter(
-        Q(nome_cientifico__iexact=nome_cientifico) | Q(nome_comum__icontains=nome_cientifico)
-    )
-    return render(request, "resultado_pesquisa.html", {"animais": animais, "termo": nome_cientifico})
+        Q(nome_cientifico__iexact=nome_cientifico) |
+        Q(nome_comum__icontains=nome_cientifico)
+    ).distinct()  # 👈 adiciona isso aqui!
+
+    return render(request, "resultado_pesquisa.html", {
+        "animais": animais,
+        "termo": nome_cientifico
+    })
+
 
 def sair(request):
     logout(request)
