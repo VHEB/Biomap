@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 from .forms import CadastroUsuarioForm, CadastroAnimalForm, EditarPerfilForm
 from .models import Animal
 from django.db.models import Q
@@ -89,8 +90,13 @@ def resultado_pesquisa(request, nome_cientifico):
     )
     return render(request, "resultado_pesquisa.html", {"animais": animais, "termo": nome_cientifico})
 
+def sair(request):
+    logout(request)
+    messages.info(request, "Você saiu da sua conta com sucesso.")
+    return redirect('login')
+
 def sobre(request):
-    return render(request, "sobre.html")
+    return render(request, 'sobre.html')
 
 def contato(request):
-    return render(request, "contato.html")
+    return render(request, 'contato.html')
