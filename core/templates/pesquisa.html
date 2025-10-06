@@ -1,53 +1,108 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section>
+<section class="pesquisa-section">
     <h1>Pesquisa de Animais</h1>
-    <input type="text" id="search-box" placeholder="Digite o nome do animal...">
-    <ul id="suggestions" class="list-group mt-2"></ul>
+
+    <div class="search-container">
+        <input type="text" id="search-box" placeholder="Digite o nome do animal...">
+        
+        <div class="search-options">
+            <label>
+                <input type="radio" name="modo" value="comum" checked>
+                Pesquisa simples (nome comum)
+            </label>
+            <label>
+                <input type="radio" name="modo" value="cientifico">
+                Pesquisa avançada (nome científico)
+            </label>
+        </div>
+
+        <ul id="suggestions" class="list-group mt-2"></ul>
+    </div>
 </section>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const searchBox = document.getElementById("search-box");
-        const suggestionsList = document.getElementById("suggestions");
+document.addEventListener("DOMContentLoaded", function () {
+    const searchBox = document.getElementById("search-box");
+    const suggestionsList = document.getElementById("suggestions");
 
-        searchBox.addEventListener("input", function () {
-            const query = searchBox.value.trim();
+    searchBox.addEventListener("input", function () {
+        const query = searchBox.value.trim();
+        const modo = document.querySelector('input[name="modo"]:checked').value;
 
-            if (query.length < 2) {
+        if (query.length < 2) {
+            suggestionsList.innerHTML = "";
+            return;
+        }
+
+        fetch(`/autocomplete/?q=${query}&modo=${modo}`)
+            .then(response => response.json())
+            .then(data => {
                 suggestionsList.innerHTML = "";
-                return;
-            }
 
-            fetch(`/autocomplete/?q=${query}`)
-                .then(response => response.json())
-                .then(data => {
-                    suggestionsList.innerHTML = "";
+                if (data.length === 0 || data[0] === "Nenhum resultado encontrado") {
+                    const li = document.createElement("li");
+                    li.textContent = "Nenhum resultado encontrado";
+                    li.classList.add("list-group-item", "text-danger", "fw-bold");
+                    suggestionsList.appendChild(li);
+                    return;
+                }
 
-                    if (data.length === 0 || data[0] === "Nenhum resultado encontrado") {
-                        const li = document.createElement("li");
-                        li.textContent = "Nenhum resultado encontrado";
-                        li.classList.add("list-group-item", "text-danger", "fw-bold");
-                        suggestionsList.appendChild(li);
-                        return;
-                    }
-
-                    data.forEach(item => {
-                        const li = document.createElement("li");
-                        li.textContent = item;
-                        li.classList.add("list-group-item");
-                        li.addEventListener("click", function (e) {
-                            e.preventDefault();
-                            // Redireciona para a página de resultados com o item selecionado
-                            li.style.pointerEvents = 'none'; // Desabilita múltiplos cliques
-                            window.location.href = `/resultado/${encodeURIComponent(item)}/`;
-                        });
-                        suggestionsList.appendChild(li);
+                data.forEach(item => {
+                    const li = document.createElement("li");
+                    li.textContent = item;
+                    li.classList.add("list-group-item");
+                    li.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        li.style.pointerEvents = "none";
+                        window.location.href = `/resultado/${encodeURIComponent(item)}/`;
                     });
-                })
-                .catch(error => console.error("Erro na requisição:", error));
-        });
+                    suggestionsList.appendChild(li);
+                });
+            })
+            .catch(error => console.error("Erro na requisição:", error));
     });
+});
 </script>
+
+<style>
+.pesquisa-section {
+    text-align: center;
+    margin-top: 40px;
+}
+.search-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.search-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 15px 0;
+    font-weight: bold;
+}
+.search-options label {
+    cursor: pointer;
+}
+.search-options input[type="radio"] {
+    margin-right: 8px;
+}
+.list-group {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.list-group-item {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.list-group-item:hover {
+    background-color: #f0f0f0;
+}
+</style>
 {% endblock %}

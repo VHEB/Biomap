@@ -67,21 +67,26 @@ def pesquisa_animal(request):
     return render(request, "pesquisa.html")
 
 
-def animal_suggestions(request):
+def autocomplete(request):
     query = request.GET.get("q", "").strip()
-    
-    if query:
-        animais = Animal.objects.filter(
-            Q(nome_cientifico__icontains=query) | Q(nome_comum__icontains=query)
-        )[:10]  # Limita a 10 sugestões
+    modo = request.GET.get("modo", "comum")
 
-        suggestions = list(animais.values_list("nome_cientifico", flat=True))
-        if not suggestions:
-            suggestions = ["Nenhum resultado encontrado"]
+    if not query:
+        return JsonResponse([], safe=False)
+
+    if modo == "cientifico":
+        resultados = Animal.objects.filter(
+            nome_cientifico__icontains=query
+        ).values_list("nome_cientifico", flat=True).distinct()
     else:
-        suggestions = []
-    
-    return JsonResponse(suggestions, safe=False)
+        resultados = Animal.objects.filter(
+            nome_comum__icontains=query
+        ).values_list("nome_comum", flat=True).distinct()
+
+    if not resultados:
+        return JsonResponse(["Nenhum resultado encontrado"], safe=False)
+
+    return JsonResponse(list(resultados), safe=False)
 
 
 def resultado_pesquisa(request, nome_cientifico):
