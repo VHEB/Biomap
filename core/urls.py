@@ -12,7 +12,7 @@ urlpatterns = [
     path('editar-usuario/', editar_usuario, name='editar_usuario'),
     path("pesquisa/", pesquisa_animal, name="pesquisa"),
     path("autocomplete/", autocomplete, name="animal-autocomplete"),
-    path("resultado/<str:nome_cientifico>/", resultado_pesquisa, name="resultado_pesquisa"),
+    path("resultado/<str:termo>/", resultado_pesquisa, name="resultado_pesquisa"),
     path("sobre/", sobre, name="sobre"),
     path("contato/", contato, name="contato"),
 ]

@@ -6,6 +6,8 @@ from django.contrib.auth import logout
 from .forms import CadastroUsuarioForm, CadastroAnimalForm, EditarPerfilForm
 from .models import Animal
 from django.db.models import Q
+import requests
+from django.core.cache import cache
 
 def index(request):
     return render(request, 'index.html')
@@ -89,17 +91,97 @@ def autocomplete(request):
     return JsonResponse(list(resultados), safe=False)
 
 
-def resultado_pesquisa(request, nome_cientifico):
-    animais = Animal.objects.filter(
-        Q(nome_cientifico__iexact=nome_cientifico) |
-        Q(nome_comum__icontains=nome_cientifico)
-    ).distinct()  # 👈 adiciona isso aqui!
+def resultado_pesquisa(request, termo):
+    termos = [t.strip() for t in termo.split(',')]
+    consulta = Q()
 
-    return render(request, "resultado_pesquisa.html", {
-        "animais": animais,
-        "termo": nome_cientifico
-    })
+    for t in termos:
+        consulta |= Q(nome_comum__icontains=t) | Q(nome_cientifico__icontains=t)
 
+    animais = Animal.objects.filter(consulta).distinct()
+
+    for animal in animais:
+        animal.imagem_url = buscar_imagem_animal(animal.nome_cientifico or animal.nome_comum)
+
+    return render(request, "resultado_pesquisa.html", {"animais": animais, "termo": termo})
+
+def buscar_imagem_animal(nome):
+    nome = nome.strip()
+    cache_key = f"img_{nome.lower()}"
+    if cache.get(cache_key):
+        return cache.get(cache_key)
+
+    termos_busca = [
+        nome,
+        nome.capitalize(),
+        nome.title(),
+        nome.lower(),
+    ]
+
+    for termo in termos_busca:
+        url = "https://commons.wikimedia.org/w/api.php"
+        params = {
+            "action": "query",
+            "format": "json",
+            "prop": "pageimages",
+            "piprop": "original",
+            "titles": termo,
+        }
+        try:
+            response = requests.get(url, params=params, timeout=5)
+            data = response.json()
+            pages = data.get("query", {}).get("pages", {})
+            for page in pages.values():
+                if "original" in page:
+                    image_url = page["original"]["source"]
+                    cache.set(cache_key, image_url, timeout=86400)
+                    return image_url
+        except Exception as e:
+            print(f"Erro ao buscar '{termo}': {e}")
+
+    # fallback
+    imagem_padrao = "/static/img/animais/sem-registro.jpg"
+    cache.set(cache_key, imagem_padrao, timeout=86400)
+    return imagem_padrao
+
+    """
+    Busca uma imagem pública do animal na Wikimedia Commons,
+    com cache automático e fallback caso não encontre.
+    """
+    nome = nome.strip()
+    cache_key = f"imagem_{nome.lower()}"
+    
+    # Verifica se já temos em cache
+    if cache.get(cache_key):
+        return cache.get(cache_key)
+    
+    url = "https://commons.wikimedia.org/w/api.php"
+    params = {
+        "action": "query",
+        "format": "json",
+        "prop": "pageimages",
+        "piprop": "original",
+        "titles": nome
+    }
+
+    try:
+        response = requests.get(url, params=params, timeout=5)
+        data = response.json()
+        pages = data.get("query", {}).get("pages", {})
+
+        for page in pages.values():
+            if "original" in page:
+                image_url = page["original"]["source"]
+                cache.set(cache_key, image_url, timeout=86400)  # 24h de cache
+                return image_url
+
+    except Exception as e:
+        print(f"[ERRO] Falha ao buscar imagem de '{nome}': {e}")
+
+    # Retorna imagem padrão se não encontrar
+    imagem_padrao = "/static/img/animais/sem-registro.jpg"
+    cache.set(cache_key, imagem_padrao, timeout=86400)
+    return imagem_padrao
 
 def sair(request):
     logout(request)
