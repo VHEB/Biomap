@@ -5,14 +5,15 @@
     <h1>Pesquisa de Animais</h1>
 
     <div class="search-container">
-        <input type="text" id="search-box" placeholder="Digite o nome do animal...">
+        <div class="search-box-wrapper">
+            <input type="text" id="search-box" placeholder="Digite o nome do animal...">
+            <ul id="suggestions" class="list-group mt-2"></ul>
+        </div>
         
         <div class="toggle-buttons">
             <button id="btn-comum" class="toggle-btn active" data-mode="comum">Simples</button>
             <button id="btn-cientifico" class="toggle-btn" data-mode="cientifico">Avançado</button>
         </div>
-
-        <ul id="suggestions" class="list-group mt-2"></ul>
     </div>
 </section>
 
@@ -74,78 +75,4 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
-
-<style>
-.pesquisa-section {
-    text-align: center;
-    margin-top: 40px;
-}
-
-.search-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-#search-box {
-    width: 100%;
-    padding: 12px 18px;
-    border-radius: 10px;
-    border: 2px solid var(--primary-color);
-    outline: none;
-    font-size: 16px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    transition: all 0.2s ease-in-out;
-}
-#search-box:focus {
-    border-color: var(--secondary-color);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.toggle-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 20px 0;
-}
-
-.toggle-btn {
-    padding: 10px 20px;
-    border: 2px solid var(--primary-color);
-    border-radius: 25px;
-    background-color: transparent;
-    color: var(--primary-color);
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.25s ease;
-}
-
-.toggle-btn:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-.toggle-btn.active {
-    background-color: var(--primary-color);
-    color: var(--background-color);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-.list-group {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.list-group-item {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.list-group-item:hover {
-    background-color: #f9f9f9;
-}
-</style>
 {% endblock %}

@@ -97,18 +97,101 @@ section {
     box-shadow: #0A0A0A;
 }
 
-/* BARRA DE PESQUISA */
-#search-box {
-    display: block;
+/* === BARRA DE PESQUISA E DROPDOWN === */
+.search-container {
     width: 100%;
-    max-width: 500px;       /* Limita a largura máxima */
-    margin: 20px auto;      /* Centraliza horizontalmente com margem vertical */
-    padding: 10px 15px;     
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: 0 auto;
 }
+
+.search-box-wrapper {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box; /* garante alinhamento com o input */
+}
+
+#search-box {
+    width: 100%;
+    padding: 12px 18px;
+    border-radius: 10px 10px 0 0;  /* borda superior arredondada */
+    border: 2px solid var(--primary-color);
+    outline: none;
+    font-size: 16px;
+    box-sizing: border-box;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    transition: all 0.2s ease-in-out;
+}
+
+#search-box:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+#suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;  /* 👈 garante mesma largura */
+    z-index: 999;
+    background-color: #fff;
+    border: 2px solid var(--primary-color);
+    border-top: none; /* 👈 remove a linha dupla com o input */
+    border-radius: 0 0 10px 10px; /* bordas inferiores arredondadas */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 250px;
+    overflow-y: auto;
+    box-sizing: border-box; /* 👈 garante largura igual ao input */
+}
+
+/* Itens da lista */
+.list-group-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.list-group-item:hover {
+    background-color: #f9f9f9;
+}
+
+/* BOTÕES DE PESQUISA (Simples / Avançado) */
+.toggle-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.toggle-btn {
+    padding: 10px 20px;
+    border: 2px solid var(--primary-color);
+    border-radius: 25px;
+    background-color: transparent;
+    color: var(--primary-color);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.toggle-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.toggle-btn.active {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+
 
 /* LOGO */
 .logo {
@@ -147,75 +230,6 @@ section {
     color: var(--background-color);
     cursor: pointer;
 }
-
-
-/* Estilo para a lista de sugestões */
-#suggestions {
-    list-style: none;
-    padding: 0;
-    margin: 10px auto;
-    max-width: 500px;
-    background-color: #f8f9face;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-#suggestions li {
-    padding: 10px 15px;
-    border-bottom: 1px solid #ddd;
-    cursor: pointer;
-    background-color: var(--secondary-color); /* Amarelo */
-    color: var(--font-color);
-    transition: background-color 0.3s, color 0.3s;
-    font-weight: 500;
-}
-
-#suggestions li:last-child {
-    border-bottom: none;
-}
-
-#suggestions li:hover {
-    background-color: var(--tertiary-color); /* Vermelho no hover */
-    color: white;
-}
-
-/* Último item sem borda */
-#suggestions li:last-child {
-    border-bottom: none;
-}
-
-/* Hover dos itens */
-#suggestions li:hover {
-    background-color: var(--tertiary-color); /* vermelho */
-    color: white;
-}
-
-/* Estilo do aviso de “Nenhum resultado” */
-#suggestions .text-danger {
-    color: var(--tertiary-color);
-    font-weight: bold;
-    background-color: #fdf2f2;
-}
-
-.btn-search {
-    background-color: var(--secondary-color);
-    color: var(--background-color);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s, color 0.3s;
-}
-.btn-search:hover {
-    background-color: var(--tertiary-color);
-    color: white;
-}
-.btn-search a {
-    text-decoration: none;
-    color: var(--background-color);
-}
-
 
 /* footer */
 .main_footer {
@@ -320,4 +334,17 @@ section {
     font-size: 0.9em;
     font-style: italic;
     color: var(--background-color);
+}
+
+
+/* RESPONSIVIDADE */
+@media (max-width: 600px) {
+    .toggle-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .toggle-btn {
+        width: 100%;
+    }
 }
