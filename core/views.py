@@ -1,5 +1,7 @@
 import re
 import requests
+import geopandas as gpd
+import matplotlib.pyplot as plt
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib import messages
@@ -11,6 +13,7 @@ from django.db.models.functions import Lower
 from .forms import CadastroUsuarioForm, CadastroAnimalForm, EditarPerfilForm
 from .models import Animal
 from unidecode import unidecode
+from pathlib import Path
 
 # ------------------ PÁGINAS BÁSICAS ------------------
 
@@ -162,8 +165,19 @@ def resultado_pesquisa(request, nome_cientifico):
 
     # Busca imagem
     encontrado.imagem_url = buscar_imagem_animal(encontrado.nome_cientifico)
+    
 
-    return render(request, "resultado_pesquisa.html", {"animal": encontrado})
+    # Gera o mapa de regiões se houver informação
+    if animal.regiao:
+        mapa_path = gerar_mapa_animal(animal.regiao, animal.nome_cientifico)
+    else:
+        mapa_path = None
+
+    return render(request, "resultado_pesquisa.html", {
+        "animal": animal,
+        "mapa_path": mapa_path,
+    })
+
 
 # ------------------ BUSCA DE IMAGEM ------------------
 
@@ -216,6 +230,48 @@ def buscar_imagem_animal(nome):
     cache.set(cache_key, imagem_padrao, timeout=86400)
     print(f"[INFO] Nenhuma imagem encontrada para '{nome}', usando padrão.")
     return imagem_padrao
+
+
+# ------------------ MAPA ------------------
+def gerar_mapa_animal(regioes, nome_cientifico):
+    """
+    Gera um mapa do Brasil com os estados de ocorrência destacados.
+    Regiões podem ser passadas como lista de siglas ou nomes (ex: ['SP', 'MG'] ou ['São Paulo']).
+    Retorna o caminho do arquivo gerado.
+    """
+    try:
+        # Caminho base para salvar o mapa
+        pasta_mapa = Path("media/mapas")
+        pasta_mapa.mkdir(parents=True, exist_ok=True)
+
+        # Carrega o shapefile do Brasil (você pode baixar de https://github.com/tbrugz/geodata-br)
+        brasil = gpd.read_file("https://raw.githubusercontent.com/tbrugz/geodata-br/master/geojson/geojs-100-mun.json")
+        estados = brasil.dissolve(by="UF")
+
+        # Normaliza o campo de regiões (caso esteja como string separada por vírgula)
+        if isinstance(regioes, str):
+            regioes = [r.strip().upper() for r in regioes.split(",") if r.strip()]
+        regioes_set = set(regioes)
+
+        # Define cores
+        estados["color"] = estados.index.map(lambda uf: "green" if uf.upper() in regioes_set else "#CCCCCC")
+
+        # Cria o mapa
+        fig, ax = plt.subplots(figsize=(8, 6))
+        estados.plot(ax=ax, color=estados["color"], edgecolor="black")
+        ax.set_title(f"Distribuição geográfica de {nome_cientifico}", fontsize=10)
+        ax.axis("off")
+
+        # Caminho final
+        nome_arquivo = f"mapa_{nome_cientifico.replace(' ', '_')}.png"
+        caminho_mapa = pasta_mapa / nome_arquivo
+        plt.savefig(caminho_mapa, bbox_inches="tight", dpi=150)
+        plt.close(fig)
+
+        return str(caminho_mapa)
+    except Exception as e:
+        print(f"[ERRO MAPA] Falha ao gerar mapa de {nome_cientifico}: {e}")
+        return None
 
 # ------------------ OUTRAS PÁGINAS ------------------
 

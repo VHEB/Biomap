@@ -226,6 +226,18 @@ section {
     line-height: 1.5;
 }
 
+/* Estilos do Mapa */
+.mapa-container {
+    margin-top: 20px;
+    text-align: center;
+}
+.mapa-estado {
+    max-width: 90%;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
 /* LOGO */
 .logo {
     height: 80px;
