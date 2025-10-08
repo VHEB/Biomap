@@ -24,20 +24,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const buttons = document.querySelectorAll(".toggle-btn");
     let modo = "comum";
 
-    // Alternar entre Simples / Avançado
+    // Alternar entre modos de busca
     buttons.forEach(btn => {
         btn.addEventListener("click", () => {
             buttons.forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
             modo = btn.dataset.mode;
             suggestionsList.innerHTML = "";
+            searchBox.value = "";
             searchBox.placeholder = (modo === "comum")
                 ? "Digite o nome comum do animal..."
                 : "Digite o nome científico do animal...";
         });
     });
 
-    // Autocomplete da busca
+    // Função de busca com autocomplete
     searchBox.addEventListener("input", function () {
         const query = searchBox.value.trim();
 
@@ -46,12 +47,12 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        fetch(`/autocomplete/?q=${query}&modo=${modo}`)
+        fetch(`/autocomplete/?q=${encodeURIComponent(query)}&modo=${modo}`)
             .then(response => response.json())
             .then(data => {
                 suggestionsList.innerHTML = "";
 
-                if (data.length === 0 || data[0] === "Nenhum resultado encontrado") {
+                if (!data || data.length === 0) {
                     const li = document.createElement("li");
                     li.textContent = "Nenhum resultado encontrado";
                     li.classList.add("list-group-item", "text-danger", "fw-bold");
@@ -59,15 +60,24 @@ document.addEventListener("DOMContentLoaded", function () {
                     return;
                 }
 
+                // Exibir sugestões
                 data.forEach(item => {
                     const li = document.createElement("li");
-                    li.textContent = item;
-                    li.classList.add("list-group-item");
-                    li.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        li.style.pointerEvents = "none";
-                        window.location.href = `/resultado/${encodeURIComponent(item)}/`;
+
+                    // Exibe nome comum e nome científico juntos
+                    if (modo === "comum") {
+                        li.innerHTML = `<strong>${item.comum}</strong><br><small><em>${item.cientifico}</em></small>`;
+                    } else {
+                        li.innerHTML = `<strong><em>${item.cientifico}</em></strong><br><small>${item.comum}</small>`;
+                    }
+
+                    li.classList.add("list-group-item", "suggestion-item");
+
+                    // Redireciona para o resultado usando o nome científico (para manter padronização)
+                    li.addEventListener("click", function () {
+                        window.location.href = `/resultado/${encodeURIComponent(item.cientifico)}/`;
                     });
+
                     suggestionsList.appendChild(li);
                 });
             })

@@ -192,6 +192,39 @@ section {
 }
 
 
+/* Resultado */
+
+.animal-card {
+    display: flex;
+    align-items: flex-start;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.animal-img img {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-right: 30px;
+    border: 3px solid var(--primary-color);
+}
+.animal-info h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+.animal-info h3 {
+    margin: 5px 0 15px;
+    font-style: italic;
+    color: #555;
+}
+.animal-info p {
+    margin: 4px 0;
+    line-height: 1.5;
+}
 
 /* LOGO */
 .logo {
