@@ -169,18 +169,20 @@ def resultado_pesquisa(request, nome_cientifico):
 
 def buscar_imagem_animal(nome):
     """
-    Busca uma imagem pública do animal na Wikimedia Commons.
-    Usa cache e fallback para imagem padrão.
+    Busca imagem pública do animal na Wikimedia Commons.
+    Usa cache, cabeçalhos adequados e fallback para imagem padrão.
     """
     nome = nome.strip()
     cache_key = "img_" + re.sub(r'[^a-zA-Z0-9_]', '_', nome.lower())
 
-    # Cache check
-    if cache.get(cache_key):
-        return cache.get(cache_key)
+    # 🔹 Verifica cache primeiro
+    imagem_em_cache = cache.get(cache_key)
+    if imagem_em_cache:
+        return imagem_em_cache
 
     base_url = "https://commons.wikimedia.org/w/api.php"
-    termos_busca = [nome, nome.capitalize(), nome.title(), nome.lower()]
+    headers = {"User-Agent": "BioMap/1.0 (https://biomap.example.com; contato@biomap.com)"}
+    termos_busca = [nome, nome.title(), nome.capitalize(), nome.lower()]
 
     for termo in termos_busca:
         params = {
@@ -190,9 +192,11 @@ def buscar_imagem_animal(nome):
             "piprop": "original",
             "titles": termo
         }
+
         try:
-            response = requests.get(base_url, params=params, timeout=5)
+            response = requests.get(base_url, params=params, headers=headers, timeout=10)
             if response.status_code != 200:
+                print(f"[ERRO] HTTP {response.status_code} ao buscar {termo}")
                 continue
 
             data = response.json()
@@ -201,16 +205,17 @@ def buscar_imagem_animal(nome):
                 if "original" in page:
                     image_url = page["original"]["source"]
                     cache.set(cache_key, image_url, timeout=86400)
+                    print(f"[OK] Imagem encontrada para {nome}: {image_url}")
                     return image_url
 
         except Exception as e:
             print(f"[ERRO] Falha ao buscar imagem de '{termo}': {e}")
 
-    # Fallback padrão
+    # 🔹 Fallback padrão se nada for encontrado
     imagem_padrao = "/static/img/animais/sem-registro.jpg"
     cache.set(cache_key, imagem_padrao, timeout=86400)
+    print(f"[INFO] Nenhuma imagem encontrada para '{nome}', usando padrão.")
     return imagem_padrao
-
 
 # ------------------ OUTRAS PÁGINAS ------------------
 
