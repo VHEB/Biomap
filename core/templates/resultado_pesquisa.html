@@ -27,16 +27,15 @@
                     <p><strong>Região:</strong> {{ animal.regiao }}</p>
 
                     <!-- 🗺️ Mapa -->
-                    {% if mapa_path %}
+                   {% if mapa_path %}
                         <div class="mapa-container">
                             <h4>Mapa de distribuição:</h4>
-                            <img src="{% get_media_prefix %}{{ mapa_path|cut:'media/' }}" 
-                                 alt="Mapa da região de {{ animal.nome_comum }}" 
-                                 class="mapa-estado">
+                            <img src="/media/{{ mapa_path }}" alt="Mapa de distribuição" class="mapa-estado">
                         </div>
                     {% else %}
-                        <p class="sem-local"><em>Sem local de incidência registrado.</em></p>
+                        <p><em>Sem local de incidência registrado.</em></p>
                     {% endif %}
+
 
                     <p><strong>Bioma:</strong> {{ animal.bioma }}</p>
                     <p><strong>Justificativa:</strong> {{ animal.justificativa }}</p>

@@ -1,10 +1,12 @@
 import re
 import requests
 import geopandas as gpd
+import matplotlib
+matplotlib.use("Agg")  
 import matplotlib.pyplot as plt
+from django.conf import settings
 from pathlib import Path
 from unidecode import unidecode
-
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import messages
@@ -15,6 +17,17 @@ from django.db.models import Q
 
 from .forms import CadastroUsuarioForm, CadastroAnimalForm, EditarPerfilForm
 from .models import Animal
+
+
+# Mapeamento de Regiões do Brasil para Nomes de Estados (usado em gerar_mapa_animal)
+# Se o campo 'regiao' do animal contiver uma chave (ex: 'SUL'), seus estados serão pintados.
+MAPA_REGIOES_BRASIL = {
+    "SUL": ["PARANA", "SANTA CATARINA", "RIO GRANDE DO SUL"],
+    "SUDESTE": ["MINAS GERAIS", "SAO PAULO", "RIO DE JANEIRO", "ESPIRITO SANTO"],
+    "NORDESTE": ["MARANHAO", "PIAUI", "CEARA", "RIO GRANDE DO NORTE", "PARAIBA", "PERNAMBUCO", "ALAGOAS", "SERGIPE", "BAHIA"],
+    "NORTE": ["RONDONIA", "ACRE", "AMAZONAS", "RORAIMA", "PARA", "AMAPA", "TOCANTINS"],
+    "CENTRO-OESTE": ["MATO GROSSO", "MATO GROSSO DO SUL", "GOIAS", "DISTRITO FEDERAL"],
+}
 
 
 # ------------------ PÁGINAS BÁSICAS ------------------
@@ -103,10 +116,12 @@ def autocomplete(request):
 
 def resultado_pesquisa(request, nome_cientifico):
     """Exibe o resultado da pesquisa e gera mapa e imagem do animal."""
+    # O código duplicado do folium e a segunda definição da função foram removidos.
+
     termo = unidecode(nome_cientifico.strip().lower())
     print(f"[DEBUG] Termo pesquisado: {termo}")
 
-    # Busca ignorando acentos
+    # Busca o animal ignorando acentos
     animal = None
     for a in Animal.objects.all():
         if unidecode(a.nome_cientifico.strip().lower()) == termo:
@@ -125,8 +140,10 @@ def resultado_pesquisa(request, nome_cientifico):
     # 🗺️ Gera mapa se houver região
     mapa_path = None
     if animal.regiao and animal.regiao.strip():
+        # Usa a função corrigir com o novo mapeamento
         mapa_path = gerar_mapa_animal(animal.regiao, animal.nome_cientifico)
 
+    # Passa a variável 'mapa_path' que contém o caminho relativo do PNG
     return render(request, "resultado_pesquisa.html", {"animal": animal, "mapa_path": mapa_path})
 
 
@@ -174,37 +191,57 @@ def buscar_imagem_animal(nome):
 # ------------------ MAPA ------------------
 
 def gerar_mapa_animal(regioes, nome_cientifico):
-    """Gera mapa destacando estados onde o animal ocorre."""
+    """Gera mapa destacando estados onde o animal ocorre.
+       Aceita regiões (ex: 'SUL') ou estados (ex: 'PARANA, SAO PAULO')."""
     try:
         pasta = Path("media/mapas")
         pasta.mkdir(parents=True, exist_ok=True)
 
-        # ✅ URL corrigida — shapefile completo do Brasil (por UF)
+        # ✅ Shapefile do Brasil (por estado)
         url_geojson = "https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson"
         brasil = gpd.read_file(url_geojson)
 
-        # Normaliza estados
-        if isinstance(regioes, str):
-            regioes = [r.strip().upper() for r in regioes.split(",") if r.strip()]
-        regioes_set = set(regioes)
+        # Corrige nomes e acentuação
+        brasil["name_norm"] = brasil["name"].apply(lambda x: unidecode(x).upper())
 
-        # Corrige nome da coluna com o estado (no shapefile é “name”)
-        brasil["color"] = brasil["name"].apply(
-            lambda uf: "green" if uf.upper() in regioes_set else "#DDDDDD"
+        # 1. Normaliza e processa o campo 'regioes'
+        regioes_estados_a_pintar = []
+        
+        if isinstance(regioes, str):
+            # Divide por vírgula e remove acentos/limpa espaços/remove "|", tratando a entrada
+            partes_originais = [unidecode(r.strip().upper()).replace("|", "") for r in regioes.split(",") if r.strip()]
+            
+            # 2. Mapeia as partes para a lista final de estados
+            for parte in partes_originais:
+                # Se for uma região definida (ex: "SUL"), adiciona todos os seus estados
+                if parte in MAPA_REGIOES_BRASIL:
+                    regioes_estados_a_pintar.extend(MAPA_REGIOES_BRASIL[parte])
+                # Se não for uma região, assume que é um nome de estado e o adiciona
+                else:
+                    regioes_estados_a_pintar.append(parte)
+
+        # Remove duplicatas e cria o conjunto final de estados a pintar
+        regioes_set = set(regioes_estados_a_pintar)
+        
+        # 3. Pinta o mapa
+        # Pinta de 'green' se o estado normalizado estiver no nosso conjunto de regiões
+        brasil["color"] = brasil["name_norm"].apply(
+            lambda uf: "green" if uf in regioes_set else "#DDDDDD"
         )
 
-        # Cria o mapa
         fig, ax = plt.subplots(figsize=(8, 6))
         brasil.plot(ax=ax, color=brasil["color"], edgecolor="black")
         ax.set_title(f"Distribuição geográfica de {nome_cientifico}", fontsize=10)
         ax.axis("off")
 
+        # Caminho do mapa
         mapa_path = pasta / f"mapa_{nome_cientifico.replace(' ', '_')}.png"
         plt.savefig(mapa_path, bbox_inches="tight", dpi=150)
         plt.close(fig)
         print(f"[OK MAPA] Mapa salvo em {mapa_path}")
 
-        return str(mapa_path)
+        # 🔹 Retorna o caminho relativo para o template
+        return f"mapas/{mapa_path.name}"
 
     except Exception as e:
         print(f"[ERRO MAPA] Falha ao gerar mapa de {nome_cientifico}: {e}")
