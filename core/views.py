@@ -2,18 +2,20 @@ import re
 import requests
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from django.shortcuts import render, redirect, get_object_or_404
+from pathlib import Path
+from unidecode import unidecode
+
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.core.cache import cache
 from django.db.models import Q
-from django.db.models.functions import Lower
+
 from .forms import CadastroUsuarioForm, CadastroAnimalForm, EditarPerfilForm
 from .models import Animal
-from unidecode import unidecode
-from pathlib import Path
+
 
 # ------------------ PÁGINAS BÁSICAS ------------------
 
@@ -75,12 +77,11 @@ def cadastro_animal(request):
 # ------------------ PESQUISA ------------------
 
 def pesquisa_animal(request):
-    """Renderiza a página de pesquisa."""
     return render(request, "pesquisa.html")
 
 
 def autocomplete(request):
-    """Retorna sugestões com nome comum e nome científico."""
+    """Retorna sugestões de nomes comuns ou científicos."""
     query = request.GET.get("q", "").strip()
     modo = request.GET.get("modo", "comum")
 
@@ -101,177 +102,114 @@ def autocomplete(request):
 
 
 def resultado_pesquisa(request, nome_cientifico):
-    """
-    Exibe o resultado da pesquisa do animal (com tolerância total de acentos e capitalização).
-    """
-
+    """Exibe o resultado da pesquisa e gera mapa e imagem do animal."""
     termo = unidecode(nome_cientifico.strip().lower())
     print(f"[DEBUG] Termo pesquisado: {termo}")
 
-    # Pré-filtragem (ignora case e espaços extras)
-    animais = Animal.objects.filter(
-        Q(nome_cientifico__iexact=nome_cientifico.strip()) |
-        Q(nome_cientifico__icontains=nome_cientifico.strip())
-    )
+    # Busca ignorando acentos
+    animal = None
+    for a in Animal.objects.all():
+        if unidecode(a.nome_cientifico.strip().lower()) == termo:
+            animal = a
+            break
 
-    # 🔍 Se ainda não achou, aplica unidecode (busca sem acentuação)
-    if not animais.exists():
-        animais_candidatos = Animal.objects.all()
-        correspondentes = [
-            a for a in animais_candidatos
-            if unidecode(a.nome_cientifico.strip().lower()) == termo
-        ]
-        if not correspondentes:
-            correspondentes = [
-                a for a in animais_candidatos
-                if termo in unidecode(a.nome_cientifico.strip().lower())
-            ]
-        animais = correspondentes
-
-    # 🐢 Se ainda não achou nada:
-    if not animais:
-        print(f"[WARN] Nenhum animal encontrado para: {nome_cientifico}")
+    if not animal:
         messages.warning(request, f"Nenhum registro encontrado para '{nome_cientifico}'.")
-        return render(request, "resultado_pesquisa.html", {"animais": []})
-
-    # 🦁 Achou o animal
-    if isinstance(animais, list):
-        animal = animais[0]
-    else:
-        animal = animais.first()
+        return render(request, "resultado_pesquisa.html", {"animal": None, "mapa_path": None})
 
     print(f"[INFO] Animal encontrado: {animal.nome_cientifico}")
 
-    # Busca imagem (com cache)
+    # 🖼️ Busca imagem
     animal.imagem_url = buscar_imagem_animal(animal.nome_cientifico)
 
-    return render(request, "resultado_pesquisa.html", {"animal": animal})
-    """
-    Exibe o resultado da pesquisa com tolerância a acentos e capitalização.
-    """
-    termo = unidecode(nome_cientifico.strip().lower())
-
-    # Busca ignorando acentuação e capitalização
-    animais = Animal.objects.all()
-    encontrado = None
-    for a in animais:
-        if unidecode(a.nome_cientifico.strip().lower()) == termo:
-            encontrado = a
-            break
-
-    if not encontrado:
-        messages.warning(request, f"Nenhum registro encontrado para '{nome_cientifico}'.")
-        return render(request, "resultado_pesquisa.html", {"animais": []})
-
-    # Busca imagem
-    encontrado.imagem_url = buscar_imagem_animal(encontrado.nome_cientifico)
-    
-
-    # Gera o mapa de regiões se houver informação
-    if animal.regiao:
+    # 🗺️ Gera mapa se houver região
+    mapa_path = None
+    if animal.regiao and animal.regiao.strip():
         mapa_path = gerar_mapa_animal(animal.regiao, animal.nome_cientifico)
-    else:
-        mapa_path = None
 
-    return render(request, "resultado_pesquisa.html", {
-        "animal": animal,
-        "mapa_path": mapa_path,
-    })
+    return render(request, "resultado_pesquisa.html", {"animal": animal, "mapa_path": mapa_path})
 
 
 # ------------------ BUSCA DE IMAGEM ------------------
 
 def buscar_imagem_animal(nome):
-    """
-    Busca imagem pública do animal na Wikimedia Commons.
-    Usa cache, cabeçalhos adequados e fallback para imagem padrão.
-    """
+    """Busca imagem pública na Wikimedia Commons."""
     nome = nome.strip()
     cache_key = "img_" + re.sub(r'[^a-zA-Z0-9_]', '_', nome.lower())
 
-    # 🔹 Verifica cache primeiro
     imagem_em_cache = cache.get(cache_key)
     if imagem_em_cache:
         return imagem_em_cache
 
     base_url = "https://commons.wikimedia.org/w/api.php"
-    headers = {"User-Agent": "BioMap/1.0 (https://biomap.example.com; contato@biomap.com)"}
-    termos_busca = [nome, nome.title(), nome.capitalize(), nome.lower()]
+    headers = {"User-Agent": "BioMap/1.0 (https://biomap.example.com)"}
+    termos = [nome, nome.title(), nome.lower()]
 
-    for termo in termos_busca:
-        params = {
-            "action": "query",
-            "format": "json",
-            "prop": "pageimages",
-            "piprop": "original",
-            "titles": termo
-        }
-
+    for termo in termos:
         try:
-            response = requests.get(base_url, params=params, headers=headers, timeout=10)
-            if response.status_code != 200:
-                print(f"[ERRO] HTTP {response.status_code} ao buscar {termo}")
-                continue
+            response = requests.get(base_url, params={
+                "action": "query",
+                "format": "json",
+                "prop": "pageimages",
+                "piprop": "original",
+                "titles": termo
+            }, headers=headers, timeout=10)
 
-            data = response.json()
-            pages = data.get("query", {}).get("pages", {})
-            for page in pages.values():
-                if "original" in page:
-                    image_url = page["original"]["source"]
-                    cache.set(cache_key, image_url, timeout=86400)
-                    print(f"[OK] Imagem encontrada para {nome}: {image_url}")
-                    return image_url
-
+            if response.status_code == 200:
+                data = response.json()
+                for page in data.get("query", {}).get("pages", {}).values():
+                    if "original" in page:
+                        image_url = page["original"]["source"]
+                        cache.set(cache_key, image_url, 86400)
+                        print(f"[OK] Imagem encontrada para {nome}: {image_url}")
+                        return image_url
         except Exception as e:
-            print(f"[ERRO] Falha ao buscar imagem de '{termo}': {e}")
+            print(f"[ERRO IMG] Falha ao buscar imagem de {nome}: {e}")
 
-    # 🔹 Fallback padrão se nada for encontrado
     imagem_padrao = "/static/img/animais/sem-registro.jpg"
-    cache.set(cache_key, imagem_padrao, timeout=86400)
-    print(f"[INFO] Nenhuma imagem encontrada para '{nome}', usando padrão.")
+    cache.set(cache_key, imagem_padrao, 86400)
     return imagem_padrao
 
 
 # ------------------ MAPA ------------------
+
 def gerar_mapa_animal(regioes, nome_cientifico):
-    """
-    Gera um mapa do Brasil com os estados de ocorrência destacados.
-    Regiões podem ser passadas como lista de siglas ou nomes (ex: ['SP', 'MG'] ou ['São Paulo']).
-    Retorna o caminho do arquivo gerado.
-    """
+    """Gera mapa destacando estados onde o animal ocorre."""
     try:
-        # Caminho base para salvar o mapa
-        pasta_mapa = Path("media/mapas")
-        pasta_mapa.mkdir(parents=True, exist_ok=True)
+        pasta = Path("media/mapas")
+        pasta.mkdir(parents=True, exist_ok=True)
 
-        # Carrega o shapefile do Brasil (você pode baixar de https://github.com/tbrugz/geodata-br)
-        brasil = gpd.read_file("https://raw.githubusercontent.com/tbrugz/geodata-br/master/geojson/geojs-100-mun.json")
-        estados = brasil.dissolve(by="UF")
+        # ✅ URL corrigida — shapefile completo do Brasil (por UF)
+        url_geojson = "https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson"
+        brasil = gpd.read_file(url_geojson)
 
-        # Normaliza o campo de regiões (caso esteja como string separada por vírgula)
+        # Normaliza estados
         if isinstance(regioes, str):
             regioes = [r.strip().upper() for r in regioes.split(",") if r.strip()]
         regioes_set = set(regioes)
 
-        # Define cores
-        estados["color"] = estados.index.map(lambda uf: "green" if uf.upper() in regioes_set else "#CCCCCC")
+        # Corrige nome da coluna com o estado (no shapefile é “name”)
+        brasil["color"] = brasil["name"].apply(
+            lambda uf: "green" if uf.upper() in regioes_set else "#DDDDDD"
+        )
 
         # Cria o mapa
         fig, ax = plt.subplots(figsize=(8, 6))
-        estados.plot(ax=ax, color=estados["color"], edgecolor="black")
+        brasil.plot(ax=ax, color=brasil["color"], edgecolor="black")
         ax.set_title(f"Distribuição geográfica de {nome_cientifico}", fontsize=10)
         ax.axis("off")
 
-        # Caminho final
-        nome_arquivo = f"mapa_{nome_cientifico.replace(' ', '_')}.png"
-        caminho_mapa = pasta_mapa / nome_arquivo
-        plt.savefig(caminho_mapa, bbox_inches="tight", dpi=150)
+        mapa_path = pasta / f"mapa_{nome_cientifico.replace(' ', '_')}.png"
+        plt.savefig(mapa_path, bbox_inches="tight", dpi=150)
         plt.close(fig)
+        print(f"[OK MAPA] Mapa salvo em {mapa_path}")
 
-        return str(caminho_mapa)
+        return str(mapa_path)
+
     except Exception as e:
         print(f"[ERRO MAPA] Falha ao gerar mapa de {nome_cientifico}: {e}")
         return None
+
 
 # ------------------ OUTRAS PÁGINAS ------------------
 
