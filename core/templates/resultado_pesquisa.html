@@ -5,12 +5,10 @@
 <div class="resultado-container">
     {% if animal %}
         <div class="animal-card">
-            <!-- 🖼️ Imagem do animal -->
             <div class="animal-img">
                 <img src="{{ animal.imagem_url }}" alt="{{ animal.nome_cientifico }}">
             </div>
 
-            <!-- 📄 Informações -->
             <div class="animal-info">
                 <h2 class="animal-nome">{{ animal.nome_comum }}</h2>
                 <h3 class="animal-cientifico"><em>{{ animal.nome_cientifico }}</em></h3>
@@ -25,23 +23,39 @@
                     <p><strong>Categoria:</strong> {{ animal.categoria }}</p>
                     <p><strong>Endêmico do Brasil:</strong> {{ animal.endemica_brasil|yesno:"Sim,Não" }}</p>
                     <p><strong>Região:</strong> {{ animal.regiao }}</p>
-
-                    <!-- 🗺️ Mapa -->
-                   {% if mapa_path %}
-                        <div class="mapa-container">
-                            <h4>Mapa de distribuição:</h4>
-                            <img src="/media/{{ mapa_path }}" alt="Mapa de distribuição" class="mapa-estado">
-                        </div>
-                    {% else %}
-                    <p class="sem-local"><em>Sem local de incidência registrado.</em></p>
-                    {% endif %} 
-
-
-                    <p><strong>Bioma:</strong> {{ animal.bioma }}</p>
-                    <p><strong>Justificativa:</strong> {{ animal.justificativa }}</p>
                 </div>
             </div>
         </div>
+
+        {% if mapa_path %}
+            <div class="mapa-full-width">
+                <div class="mapa-container">
+                    <h4>Mapa de distribuição:</h4>
+                    <img src="/media/{{ mapa_path }}" alt="Mapa de distribuição" class="mapa-estado">
+                </div>
+            </div>
+        {% else %}
+            <p class="sem-local-mapa"><em>Sem mapa de incidência gerado.</em></p>
+        {% endif %}
+
+        <div class="bioma-justificativa-container">
+            <div class="bioma-tags">
+                <p><strong>Biomas:</strong></p>
+                <div class="bioma-list">
+                    {% for bioma in biomas_list %}
+                        <span class="bioma-tag {{ bioma|lower|slugify }}">
+                            {{ bioma }}
+                        </span>
+                    {% empty %}
+                        <span class="sem-local">Não Aplicável</span>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <p class="justificativa-texto"><strong>Justificativa:</strong> {{ animal.justificativa }}</p>
+        </div>
+
+
     {% else %}
         <div class="no-result">
             <h3>🐾 Nenhum registro encontrado.</h3>
@@ -61,7 +75,7 @@
     background: #f9fafc;
 }
 
-/* ===== Cartão principal ===== */
+/* ===== Cartão principal (Imagem e Info) ===== */
 .animal-card {
     display: flex;
     flex-wrap: wrap;
@@ -71,16 +85,9 @@
     overflow: hidden;
     width: 100%;
     max-width: 900px;
-    margin-bottom: 30px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 30px; 
 }
 
-.animal-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 25px rgba(0,0,0,0.15);
-}
-
-/* ===== Imagem do animal ===== */
 .animal-img {
     flex: 1 1 300px;
     display: flex;
@@ -98,7 +105,6 @@
     object-fit: cover;
 }
 
-/* ===== Informações ===== */
 .animal-info {
     flex: 2 1 400px;
     padding: 25px;
@@ -122,30 +128,106 @@
     line-height: 1.4;
 }
 
-/* ===== Mapa ===== */
+/* ===== Layout Centralizado do Mapa (FINAL) ===== */
+.mapa-full-width {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Centraliza o mapa horizontalmente */
+    margin-bottom: 30px; 
+}
+
 .mapa-container {
-    margin-top: 20px;
     text-align: center;
+    max-width: 700px;
+    width: 100%;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .mapa-container h4 {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     color: #004d40;
+    font-size: 1.5rem;
 }
 
 .mapa-estado {
     width: 100%;
-    max-width: 450px;
+    height: auto;
     border-radius: 10px;
-    border: 2px solid #ccc;
-    transition: transform 0.3s ease;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-.mapa-estado:hover {
-    transform: scale(1.02);
+/* ===== Biomas e Justificativa (FINAL) ===== */
+.bioma-justificativa-container {
+    width: 100%;
+    max-width: 900px; 
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
 }
 
-/* ===== Botão de voltar ===== */
+.bioma-tags {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #ddd;
+}
+
+.bioma-tags p strong {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    color: #004d40;
+}
+
+.bioma-tag {
+    display: inline-block;
+    padding: 6px 15px;
+    margin: 5px 8px 5px 0;
+    border-radius: 20px; 
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.justificativa-texto {
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+/* ===== Cores dos Biomas (Estilização de Círculos) ===== */
+/* Os nomes das classes (ex: .cerrado) são gerados pelo filtro |slugify */
+.cerrado {
+    background-color: #ffd700; 
+    color: #333; 
+}
+.mata-atlantica {
+    background-color: #008000; 
+}
+.amazonia {
+    background-color: #00a000;
+}
+.caatinga {
+    background-color: #ff4500;
+}
+.pampa {
+    background-color: #87ceeb; 
+    color: #333;
+}
+.pantanal {
+    background-color: #800080;
+}
+.sistema-costeiro-marinho {
+    background-color: #1e90ff; 
+}
+
+/* ===== Botão e Mensagens ===== */
 .btn-search {
     background: #00796b;
     color: white;
@@ -154,13 +236,13 @@
     text-decoration: none;
     font-weight: bold;
     transition: 0.3s;
+    margin-bottom: 30px;
 }
 
 .btn-search:hover {
     background: #004d40;
 }
 
-/* ===== Mensagens de erro ===== */
 .no-result {
     background: #ffeaea;
     color: #b71c1c;
@@ -170,9 +252,10 @@
     font-size: 18px;
 }
 
-.sem-local {
+.sem-local, .sem-local-mapa {
     color: #757575;
     font-style: italic;
+    margin-bottom: 30px;
 }
 </style>
 {% endblock %}
