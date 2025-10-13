@@ -25,20 +25,19 @@
                     <p><strong>Região:</strong> {{ animal.regiao }}</p>
                 </div>
             </div>
-        </div>
 
-        {% if mapa_path %}
+            {% if mapa_path %}
             <div class="mapa-full-width">
                 <div class="mapa-container">
                     <h4>Mapa de distribuição:</h4>
                     <img src="/media/{{ mapa_path }}" alt="Mapa de distribuição" class="mapa-estado">
                 </div>
             </div>
-        {% else %}
-            <p class="sem-local-mapa"><em>Sem mapa de incidência gerado.</em></p>
-        {% endif %}
+            {% else %}
+                <p class="sem-local-mapa"><em>Sem mapa de incidência gerado.</em></p>
+            {% endif %}
 
-        <div class="bioma-justificativa-container">
+            <div class="bioma-justificativa-container">
             <div class="bioma-tags">
                 <p><strong>Biomas:</strong></p>
                 <div class="bioma-list">
@@ -54,6 +53,9 @@
             
             <p class="justificativa-texto"><strong>Justificativa:</strong> {{ animal.justificativa }}</p>
         </div>
+        </div>
+
+        
 
 
     {% else %}
