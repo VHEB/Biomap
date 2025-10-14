@@ -238,6 +238,199 @@ section {
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
+/* ===== Layout geral ===== */
+.resultado-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    background: #f9fafc;
+}
+
+/* ===== Cartão principal (Imagem e Info) ===== */
+.animal-card {
+    display: flex;
+    flex-wrap: wrap;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 30px; 
+}
+
+.animal-img {
+    flex: 1 1 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f3f3;
+    padding: 20px;
+}
+
+.animal-img img {
+    width: 100%;
+    max-width: 280px;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.animal-info {
+    flex: 2 1 400px;
+    padding: 25px;
+}
+
+.animal-info h2 {
+    font-size: 28px;
+    margin-bottom: 5px;
+    color: #004d40;
+}
+
+.animal-info h3 {
+    font-size: 18px;
+    color: #00796b;
+    margin-bottom: 15px;
+}
+
+.animal-detalhes p {
+    font-size: 15px;
+    margin: 4px 0;
+    line-height: 1.4;
+}
+
+/* ===== Layout Centralizado do Mapa (FINAL) ===== */
+.mapa-full-width {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Centraliza o mapa horizontalmente */
+    margin-bottom: 30px; 
+}
+
+.mapa-container {
+    text-align: center;
+    max-width: 700px;
+    width: 100%;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.mapa-container h4 {
+    margin-bottom: 15px;
+    color: #004d40;
+    font-size: 1.5rem;
+}
+
+.mapa-estado {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* ===== Biomas e Justificativa (FINAL) ===== */
+.bioma-justificativa-container {
+    width: 100%;
+    max-width: 900px; 
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.bioma-tags {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #ddd;
+}
+
+.bioma-tags p strong {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    color: #004d40;
+}
+
+.bioma-tag {
+    display: inline-block;
+    padding: 6px 15px;
+    margin: 5px 8px 5px 0;
+    border-radius: 20px; 
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.justificativa-texto {
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+/* ===== Cores dos Biomas (Estilização de Círculos) ===== */
+/* Os nomes das classes (ex: .cerrado) são gerados pelo filtro |slugify */
+.cerrado {
+    background-color: #ffd700; 
+    color: #333; 
+}
+.mata-atlantica {
+    background-color: #008000; 
+}
+.amazonia {
+    background-color: #00a000;
+}
+.caatinga {
+    background-color: #ff4500;
+}
+.pampa {
+    background-color: #87ceeb; 
+    color: #333;
+}
+.pantanal {
+    background-color: #800080;
+}
+.sistema-costeiro-marinho {
+    background-color: #1e90ff; 
+}
+
+/* ===== Botão e Mensagens ===== */
+.btn-search {
+    background: #00796b;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+    margin-bottom: 30px;
+}
+
+.btn-search:hover {
+    background: #004d40;
+}
+
+.no-result {
+    background: #ffeaea;
+    color: #b71c1c;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.sem-local, .sem-local-mapa {
+    color: #757575;
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+
 /* LOGO */
 .logo {
     height: 80px;
