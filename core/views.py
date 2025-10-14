@@ -68,13 +68,15 @@ def cadastro_usuario(request):
         form = CadastroUsuarioForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Cadastro realizado com sucesso!')
+            messages.success(request, "Cadastro realizado com sucesso! Faça login para continuar.")
             return redirect('login')
         else:
-            messages.error(request, 'Erro ao realizar cadastro. Verifique os dados informados.')
+            messages.error(request, "Erro ao realizar cadastro. Verifique os dados informados.")
     else:
         form = CadastroUsuarioForm()
+    
     return render(request, 'cadastro_usuario.html', {'form': form})
+
 
 
 @login_required

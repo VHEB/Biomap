@@ -24,10 +24,10 @@ class InstituicaoEducacao(Usuario):
     
 
 class Pesquisador(Usuario):
-    data_nascimento = models.DateField()
-    formacao = models.CharField(max_length=255)
-    instituicao_atuante = models.CharField(max_length=255)
-    lattes = models.URLField()
+    data_nascimento = models.DateField(null=True, blank=True)
+    formacao = models.CharField(max_length=255, blank=True)
+    instituicao_atuante = models.CharField(max_length=255, blank=True)
+    lattes = models.URLField(blank=True)
     # Associação opcional com Instituição:
     instituicao = models.ForeignKey(InstituicaoEducacao, on_delete=models.SET_NULL, null=True, blank=True, related_name="pesquisadores")
 

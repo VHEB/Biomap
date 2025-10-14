@@ -2,185 +2,182 @@
 
 {% block content %}
 <section class="form-section">
-  <div class="form-container">
-    <h2>Cadastro de Usuário</h2>
+    <div class="form-container">
+        <h2>Cadastro de Usuário</h2>
 
-    {% if messages %}
-      <ul class="messages">
-        {% for message in messages %}
-          <li class="{{ message.tags }}">{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form.non_field_errors }}
 
-    <form method="post" id="userForm">
-      {% csrf_token %}
-      
-      <div class="form-group">
-        <label for="tipo_usuario">Tipo de Usuário:</label>
-        <select id="tipo_usuario" name="tipo_usuario" required>
-          <option value="comum">Comum</option>
-          <option value="pesquisador">Pesquisador</option>
-          <option value="instituicao">Instituição</option>
-        </select>
-      </div>
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Usuário</label>
+                {{ form.username }}
+            </div>
 
-      <div class="form-group">
-        <label for="nome">Nome completo:</label>
-        <input type="text" name="nome" id="nome" required>
-      </div>
+            <div class="form-group">
+                <label for="{{ form.first_name.id_for_label }}">Nome</label>
+                {{ form.first_name }}
+            </div>
 
-      <div class="form-group">
-        <label for="email">E-mail:</label>
-        <input type="email" name="email" id="email" required>
-      </div>
+            <div class="form-group">
+                <label for="{{ form.last_name.id_for_label }}">Sobrenome</label>
+                {{ form.last_name }}
+            </div>
 
-      <div class="form-group">
-        <label for="senha">Senha:</label>
-        <input type="password" name="senha" id="senha" required>
-      </div>
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">E-mail</label>
+                {{ form.email }}
+            </div>
 
-      <!-- Campos extras que serão exibidos dinamicamente -->
-      <div id="campos-pesquisador" class="hidden">
-        <div class="form-group">
-          <label for="instituicao">Instituição:</label>
-          <input type="text" name="instituicao" id="instituicao">
-        </div>
-        <div class="form-group">
-          <label for="area_pesquisa">Área de Pesquisa:</label>
-          <input type="text" name="area_pesquisa" id="area_pesquisa">
-        </div>
-        <div class="form-group">
-          <label for="registro">Registro (ex: ORCID):</label>
-          <input type="text" name="registro" id="registro">
-        </div>
-      </div>
+            <div class="form-group">
+                <label for="{{ form.tipo_usuario.id_for_label }}">Tipo de Usuário</label>
+                {{ form.tipo_usuario }}
+            </div>
 
-      <div id="campos-instituicao" class="hidden">
-        <div class="form-group">
-          <label for="nome_instituicao">Nome da Instituição:</label>
-          <input type="text" name="nome_instituicao" id="nome_instituicao">
-        </div>
-        <div class="form-group">
-          <label for="cnpj">CNPJ:</label>
-          <input type="text" name="cnpj" id="cnpj">
-        </div>
-        <div class="form-group">
-          <label for="responsavel">Responsável:</label>
-          <input type="text" name="responsavel" id="responsavel">
-        </div>
-        <div class="form-group">
-          <label for="telefone">Telefone:</label>
-          <input type="text" name="telefone" id="telefone">
-        </div>
-      </div>
+            <!-- CAMPOS PESQUISADOR -->
+            <div class="extra-fields pesquisador">
+                <h4>Informações do Pesquisador</h4>
+                <div class="form-group">
+                    <label for="{{ form.data_nascimento.id_for_label }}">Data de Nascimento</label>
+                    {{ form.data_nascimento }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.formacao.id_for_label }}">Formação</label>
+                    {{ form.formacao }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.instituicao_atuante.id_for_label }}">Instituição Atuante</label>
+                    {{ form.instituicao_atuante }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.lattes.id_for_label }}">Currículo Lattes</label>
+                    {{ form.lattes }}
+                </div>
+            </div>
 
-      <button type="submit" class="btn-submit">Cadastrar</button>
-    </form>
+            <!-- CAMPOS INSTITUIÇÃO -->
+            <div class="extra-fields instituicao">
+                <h4>Informações da Instituição</h4>
+                <div class="form-group">
+                    <label for="{{ form.nome_instituicao.id_for_label }}">Nome da Instituição</label>
+                    {{ form.nome_instituicao }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.cnpj.id_for_label }}">CNPJ</label>
+                    {{ form.cnpj }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.endereco.id_for_label }}">Endereço</label>
+                    {{ form.endereco }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.contato.id_for_label }}">Contato</label>
+                    {{ form.contato }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.website.id_for_label }}">Website</label>
+                    {{ form.website }}
+                </div>
+            </div>
 
-    <p class="text-center">Já tem uma conta? 
-      <a href="{% url 'login' %}" class="link">Faça login</a>
-    </p>
-  </div>
+            <!-- SENHA -->
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Senha</label>
+                {{ form.password1 }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Confirmar Senha</label>
+                {{ form.password2 }}
+            </div>
+
+            <button type="submit" class="btn-primary">Cadastrar</button>
+        </form>
+
+        <p class="text-center">
+            Já possui uma conta? <a href="{% url 'login' %}">Entrar</a>
+        </p>
+    </div>
 </section>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const tipoSelect = document.getElementById("tipo_usuario");
-  const camposPesquisador = document.getElementById("campos-pesquisador");
-  const camposInstituicao = document.getElementById("campos-instituicao");
-
-  function atualizarCampos() {
-    camposPesquisador.classList.add("hidden");
-    camposInstituicao.classList.add("hidden");
-
-    if (tipoSelect.value === "pesquisador") {
-      camposPesquisador.classList.remove("hidden");
-    } else if (tipoSelect.value === "instituicao") {
-      camposInstituicao.classList.remove("hidden");
-    }
-  }
-
-  tipoSelect.addEventListener("change", atualizarCampos);
-});
-</script>
 
 <style>
 .form-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh;
 }
 
 .form-container {
-  background: #fff;
-  padding: 2rem 3rem;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 500px;
+    background: #fff;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+    max-width: 600px;
+    width: 100%;
 }
 
-.form-container h2 {
-  text-align: center;
-  margin-bottom: 1rem;
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+    margin-bottom: 15px;
 }
 
-.form-group label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: .3rem;
+label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
 }
 
-.form-group input, .form-group select {
-  width: 100%;
-  padding: .6rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  transition: border-color .2s;
+input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
 }
 
-.form-group input:focus, .form-group select:focus {
-  border-color: #007b5f;
-  outline: none;
+button.btn-primary {
+    width: 100%;
+    background: #007B5E;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-.btn-submit {
-  width: 100%;
-  background: #007b5f;
-  color: white;
-  padding: .8rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
+button.btn-primary:hover {
+    background: #005f46;
 }
 
-.btn-submit:hover {
-  background: #009d72;
-}
-
-.hidden {
-  display: none;
-}
-
-.text-center {
-  text-align: center;
-  margin-top: 1rem;
-}
-
-.link {
-  color: #007b5f;
-  font-weight: bold;
-  text-decoration: none;
-}
-.link:hover {
-  text-decoration: underline;
+.extra-fields {
+    display: none;
+    margin-top: 20px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
 }
 </style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const tipoSelect = document.getElementById("id_tipo_usuario");
+    const pesquisadorFields = document.querySelector(".extra-fields.pesquisador");
+    const instituicaoFields = document.querySelector(".extra-fields.instituicao");
+
+    function toggleFields() {
+        const tipo = tipoSelect.value;
+        pesquisadorFields.style.display = (tipo === "pesquisador") ? "block" : "none";
+        instituicaoFields.style.display = (tipo === "instituicao") ? "block" : "none";
+    }
+
+    tipoSelect.addEventListener("change", toggleFields);
+    toggleFields(); // inicializa ao carregar
+});
+</script>
 {% endblock %}
