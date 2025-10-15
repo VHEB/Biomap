@@ -1,17 +1,124 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Perfil do Usuário</h1>
+<section class="form-section">
+    <div class="form-container perfil-container">
+        <h2>Seu Perfil</h2>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
-    <p><strong>Nome de Usuário:</strong> {{ usuario.username }}</p>
-    <p><strong>Email:</strong> {{ usuario.email }}</p>
+        <div class="perfil-info-group">
+            <p><strong>Nome de Usuário:</strong></p>
+            <p class="perfil-info-value">{{ usuario.username }}</p>
+        </div>
 
-    <!-- Botão para editar dados -->
-    <button onclick="window.location.href='{% url 'editar_usuario' %}'">Editar Dados</button>
-    <!-- Botão para sair -->
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Sair</button>
-    </form>
-    
+        <div class="perfil-info-group">
+            <p><strong>E-mail:</strong></p>
+            <p class="perfil-info-value">{{ usuario.email }}</p>
+        </div>
+        
+        <div class="perfil-info-group">
+            <p><strong>Tipo de Usuário:</strong></p>
+            <p class="perfil-info-value perfil-tipo">{{ usuario.get_tipo_usuario_display }}</p>
+        </div>
+
+        <hr class="perfil-divider">
+
+        <div class="perfil-actions">
+            <button 
+                class="btn-primary" 
+                onclick="window.location.href='{% url 'editar_usuario' %}'">
+                Editar Dados
+            </button>
+            
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-secondary logout-btn">
+                    Sair (Logout)
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Ajuste o form-container para a página de perfil, se necessário, ou use as classes do style.css */
+.perfil-container {
+    padding: 40px;
+    /* max-width de 450px já vem do .form-container no style.css, mas podemos ser explícitos */
+    max-width: 450px; 
+}
+
+.perfil-info-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee; /* Linha de separação */
+}
+
+.perfil-info-group:last-of-type {
+    border-bottom: none; /* Remove a borda do último item antes do divisor */
+}
+
+.perfil-info-group p strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.perfil-info-value {
+    font-weight: normal;
+    color: var(--font-color);
+    text-align: right;
+}
+
+.perfil-tipo {
+    font-weight: bold !important;
+    color: var(--secondary-color); /* Destaca o tipo de usuário */
+}
+
+.perfil-divider {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(30, 85, 68, 0.5), rgba(0, 0, 0, 0));
+    margin: 20px 0;
+}
+
+.perfil-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+/* Estilo para o botão secundário (Logout) */
+.btn-secondary {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: transparent;
+    color: var(--alert-color); /* Cor de alerta para o botão de Sair */
+    border: 1px solid var(--alert-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: var(--font-size-h5);
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: var(--alert-color);
+    color: var(--background-color);
+}
+
+/* Garante que o botão primário (Editar Dados) use a mesma altura */
+.perfil-actions .btn-primary {
+    margin-top: 0; 
+}
+</style>
 {% endblock %}

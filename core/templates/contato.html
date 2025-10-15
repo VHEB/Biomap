@@ -1,12 +1,79 @@
 {% extends "base.html" %}
-{% block title %}Contato - BioMap{% endblock %}
 
 {% block content %}
-    <h1>Contato</h1>
-    <p>Quer falar conosco? Entre em contato pelos canais abaixo:</p>
-    <ul>
-        <li>Email: contato@biomap.com</li>
-        <li>WhatsApp: <a href="https://wa.me/15998109762" target="_blank">+55 15 99810-9762</a></li>
-        <li>Instagram: <a href="https://www.instagram.com/vitor_heb/" target="_blank">@vitor_heb</a></li>
-    </ul>
+<section class="form-section">
+    <div class="form-container contato-container">
+        <h2>Fale Conosco</h2>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" action="{% url 'contato' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_nome">Seu Nome Completo</label>
+                <input type="text" id="id_nome" name="nome" required class="{% if form.nome.errors %}is-invalid{% endif %}">
+                {% if form.nome.errors %}
+                    <div class="field-error">{% for error in form.nome.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">Seu E-mail</label>
+                <input type="email" id="id_email" name="email" required class="{% if form.email.errors %}is-invalid{% endif %}">
+                {% if form.email.errors %}
+                    <div class="field-error">{% for error in form.email.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_assunto">Assunto</label>
+                <input type="text" id="id_assunto" name="assunto" required class="{% if form.assunto.errors %}is-invalid{% endif %}">
+                {% if form.assunto.errors %}
+                    <div class="field-error">{% for error in form.assunto.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_mensagem">Sua Mensagem</label>
+                <textarea id="id_mensagem" name="mensagem" rows="6" required class="{% if form.mensagem.errors %}is-invalid{% endif %}"></textarea>
+                {% if form.mensagem.errors %}
+                    <div class="field-error">{% for error in form.mensagem.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-primary">Enviar Mensagem</button>
+        </form>
+
+        <p class="text-center contato-info">
+            Preferir outro canal? Fale conosco via: <br>
+            Email: <a href="mailto:biomap@gmail.com">biomap@gmail.com</a> | WhatsApp: <a href="https://wa.me/15998109762" target="_blank">+55 15 99810-9762</a>
+        </p>
+    </div>
+</section>
+
+<style>
+/* Estilo específico para o contêiner de contato (se necessário, mas deve herdar de .form-container) */
+.contato-container {
+    max-width: 600px; /* Um pouco mais largo que login/perfil para caber a mensagem */
+}
+
+.contato-info {
+    font-size: var(--font-size-small);
+    line-height: 1.5;
+    margin-top: 25px;
+    color: #6c757d; /* Cor neutra para informações adicionais */
+}
+.contato-info a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+</style>
 {% endblock %}

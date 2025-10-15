@@ -6,6 +6,7 @@ import matplotlib
 matplotlib.use("Agg")  
 import matplotlib.pyplot as plt
 from django.conf import settings
+from django.core.mail import send_mail
 from pathlib import Path
 from unidecode import unidecode
 from django.shortcuts import render, redirect
@@ -295,4 +296,34 @@ def sobre(request):
 
 
 def contato(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        email = request.POST.get('email')
+        assunto = request.POST.get('assunto')
+        mensagem = request.POST.get('mensagem')
+
+        # Constrói o corpo do e-mail
+        corpo_email = f"Mensagem de Contato do BioMap\n\n" \
+                      f"Nome: {nome}\n" \
+                      f"E-mail: {email}\n\n" \
+                      f"Assunto: {assunto}\n\n" \
+                      f"Mensagem:\n{mensagem}"
+
+        try:
+            send_mail(
+                subject=f"[BioMap Contato] {assunto}",
+                message=corpo_email,
+                from_email=settings.DEFAULT_FROM_EMAIL, # Remetente configurado no settings
+                recipient_list=['biomap@gmail.com'],  # E-mail de destino
+                fail_silently=False,
+            )
+            messages.success(request, 'Sua mensagem foi enviada com sucesso! Em breve entraremos em contato.')
+            # Redireciona para evitar reenvio do formulário
+            return redirect('contato') 
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail: {e}")
+            messages.error(request, 'Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente ou use o email direto.')
+            # Permite renderizar a página novamente com a mensagem de erro
+
     return render(request, 'contato.html')

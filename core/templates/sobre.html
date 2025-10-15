@@ -1,16 +1,178 @@
 {% extends "base.html" %}
-{% block title %}Sobre - BioMap{% endblock %}
+{% load static %}
 
 {% block content %}
-    
-    <h1>Sobre o BioMap</h1>
-    
-    <p>O BioMap é uma plataforma voltada para conscientização ambiental e estudo da fauna brasileira.</p>
-    <p>Aqui você pode pesquisar espécies, cadastrar informações e colaborar com a comunidade.</p>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+<section class="about-section">
+    <div class="about-container">
+        <h2>Sobre</h2>
+
+        <div class="about-content">
+            <div class="about-image">
+                <img src="https://media.licdn.com/dms/image/v2/D5603AQEu0hPTmGD5dw/profile-displayphoto-shrink_200_200/B56ZZ92KMxHsAY-/0/1745868072384?e=1763596800&v=beta&t=rVjU3_SNq7OzjG1VMs8V8-QRSR1YfrQ9dVxpCvK8tTc" 
+                     alt="Vitor Heb - Desenvolvedor" 
+                     class="profile-pic">
+            </div>
+            
+            <div class="about-text">
+                <h3>Vitor Heb</h3>
+                
+                <p>O primeiro 'Hello World' é inesquecível!</p>
+
+                <p>Sou Co-fundador da plataforma educacional IEdA, desenvolvida e premiada com o primeiro lugar no 7⁰ Hacklab da FNESP.</p>
+                
+                <p>
+                    Meu primeiro contato com linguagens de programação e de desenvolvimento foi em 2016, 
+                    através do Técnico em Informática do Instituto Federal de Itapetininga (IFSP). 
+                    Desde então, tenho seguido essa jornada das linguagens e suas tecnologias.
+                </p>
+                
+                <p>
+                    Em 2024 ingressei no curso de Análise e Desenvolvimento de Sistemas no Centro Universitário Facens, 
+                    onde voltei a aprimorar meus conhecimentos, não apenas em programação, mas também em pesquisa científica, 
+                    através do programa da faculdade. Neste mesmo ano, fui chamado para estagiar no Centro de Empreendedorismo da Facens, 
+                    o **FACE**, onde realizo a gestão de projetos de engajamento nas mídias sociais e atividades e dinâmicas para os alunos.
+                </p>
+                
+                <p>
+                    Iniciei no segundo semestre de 2024 uma segunda graduação, na Univesp, em **Ciência de Dados**. 
+                    Em paralelo às duas graduações, estudo experiência do usuário (UX) e temáticas de sustentabilidade, 
+                    como educação ambiental e preservação. O objetivo é agregar na minha formação e nas minhas pesquisas científicas, 
+                    colaborando assim para um perfil profissional especialista em programação e dados, mas com conhecimentos 
+                    enriquecedores de sustentabilidade e experiência do usuário.
+                </p>
+
+            </div>
+        </div>
+        
+        <hr class="about-divider">
+
+        <div class="project-vision">
+            <h3>BioMap: Paixão por Tecnologia e Natureza</h3>
+            <p>
+                O **BioMap** é a materialização da minha paixão em aplicar tecnologia, dados e UX em temas de 
+                sustentabilidade. O projeto aspira a ser uma plataforma de referência para a catalogação e visualização 
+                da biodiversidade, com foco na fauna brasileira. Acreditamos que o conhecimento é o primeiro passo para a conservação.
+            </p>
+            <p>
+                Minha visão é tornar as informações sobre os animais mais acessíveis e interativas, inspirando uma maior 
+                valorização e proteção dos nossos ecossistemas.
+            </p>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Estilos para a página Sobre */
+.about-section {
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 80vh;
+    background-color: var(--background-color);
+}
+
+.about-container {
+    background: var(--background-color);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    max-width: 900px;
+    width: 100%;
+    text-align: center;
+}
+
+.about-container h2 {
+    color: var(--primary-color);
+    margin-bottom: 30px;
+}
+
+.about-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: center;
+    margin-bottom: 40px;
+    text-align: left;
+}
+
+.about-image {
+    flex: 1 1 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 200px;
+}
+
+.about-image .profile-pic {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--secondary-color);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.about-text {
+    flex: 2 1 550px;
+    max-width: 600px;
+}
+
+.about-text h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-size: var(--font-size-h3);
+}
+
+.about-text p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+    color: var(--font-color);
+}
+
+.about-divider {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(30, 85, 68, 0.5), rgba(0, 0, 0, 0));
+    margin: 40px auto;
+    width: 80%;
+}
+
+.project-vision {
+    text-align: left;
+}
+
+.project-vision h3 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: var(--font-size-h3);
+    text-align: center;
+}
+
+.project-vision p {
+    line-height: 1.6;
+    margin-bottom: 10px;
+    color: var(--font-color);
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-image {
+        margin-bottom: 20px;
+    }
+
+    .about-text {
+        max-width: 100%;
+    }
+
+    .about-text h3, .project-vision h3 {
+        text-align: center;
+    }
+}
+</style>
 {% endblock %}
