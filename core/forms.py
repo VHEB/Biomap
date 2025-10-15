@@ -1,8 +1,124 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import get_user_model
 from .models import Usuario, Animal, Pesquisador, InstituicaoEducacao
 
+# Obtém o modelo de usuário configurado
+User = get_user_model() 
+
+
+
 class CadastroUsuarioForm(UserCreationForm):
+    
+    # === CAMPOS BASE PERSONALIZADOS ===
+    tipo_usuario = forms.ChoiceField(
+        choices=[
+            ('comum', 'Usuário Comum'),
+            ('pesquisador', 'Pesquisador'),
+            ('instituicao', 'Instituição de Educação')
+        ],
+        label="Tipo de Usuário"
+    )
+    email = forms.EmailField(label="E-mail", required=True)
+
+    # === CAMPOS EXTRAS PARA PESQUISADOR ===
+    data_nascimento = forms.DateField(
+        label="Data de Nascimento", required=False,
+        widget=forms.DateInput(attrs={'type': 'date'})
+    )
+    formacao = forms.CharField(label="Formação", max_length=255, required=False)
+    instituicao_atuante = forms.CharField(label="Instituição Atuante", max_length=255, required=False)
+    lattes = forms.URLField(label="Currículo Lattes", required=False)
+
+    # === CAMPOS EXTRAS PARA INSTITUIÇÃO ===
+    nome_instituicao = forms.CharField(label="Nome da Instituição", max_length=255, required=False)
+    cnpj = forms.CharField(label="CNPJ", max_length=18, required=False)
+    endereco = forms.CharField(label="Endereço", widget=forms.Textarea, required=False)
+    contato = forms.CharField(label="Contato", max_length=50, required=False)
+    website = forms.URLField(label="Website", required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # ✅ NOVO: Adiciona help_text para a primeira senha (password)
+        if 'password' in self.fields:
+             self.fields['password'].help_text = '''
+                Sua senha não pode ser parecida com outras informações pessoais. 
+                Deve conter pelo menos 8 caracteres, incluindo letras, números e símbolos (@, !, #, $, etc.).
+            '''
+        
+        # Garante que os campos de nome sejam obrigatórios, pois o UserCreationForm os omite por padrão
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+
+    # === VALIDAÇÕES (CLEAN METHODS) ===
+
+    def clean_username(self):
+        # Garante que o username seja único
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("Este nome de usuário já está em uso.")
+        return username
+
+    def clean_email(self):
+        # Garante que o email seja único
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Este e-mail já está cadastrado.")
+        return email
+
+    # === LÓGICA DE SALVAMENTO (SAVE) ===
+
+    def save(self, commit=True):
+        # 1. Salva o usuário base (que é o modelo Usuario)
+        user = super().save(commit=False)
+        user.tipo_usuario = self.cleaned_data['tipo_usuario']
+        user.email = self.cleaned_data['email'] 
+        
+        if commit:
+            # Precisa salvar o objeto base para obter o 'id' que será referenciado
+            user.save()
+
+            # 2. Cria o perfil extra (Pesquisador ou InstituicaoEducacao) usando herança
+            tipo = self.cleaned_data.get('tipo_usuario')
+            
+            if tipo == 'pesquisador':
+                # Cria a instância Pesquisador, preenchendo os campos extras
+                # A herança de múltiplos modelos (multi-table inheritance) faz a ligação via PK/OneToOne
+                Pesquisador.objects.create(
+                    usuario_ptr=user, 
+                    data_nascimento=self.cleaned_data.get('data_nascimento'),
+                    formacao=self.cleaned_data.get('formacao'),
+                    instituicao_atuante=self.cleaned_data.get('instituicao_atuante'),
+                    lattes=self.cleaned_data.get('lattes'),
+                    # É necessário passar os campos herdados para garantir a integridade da tabela filha
+                    username=user.username, email=user.email, first_name=user.first_name, 
+                    last_name=user.last_name, tipo_usuario=user.tipo_usuario,
+                )
+                
+            elif tipo == 'instituicao':
+                # Cria a instância InstituicaoEducacao, preenchendo os campos extras
+                InstituicaoEducacao.objects.create(
+                    usuario_ptr=user,
+                    nome=self.cleaned_data.get('nome_instituicao'),
+                    cnpj=self.cleaned_data.get('cnpj'),
+                    endereco=self.cleaned_data.get('endereco'),
+                    contato=self.cleaned_data.get('contato'),
+                    website=self.cleaned_data.get('website'),
+                    # Campos herdados:
+                    username=user.username, email=user.email, first_name=user.first_name, 
+                    last_name=user.last_name, tipo_usuario=user.tipo_usuario,
+                )
+
+        return user
+
+    class Meta(UserCreationForm.Meta):
+        model = Usuario
+        # Incluir TODOS os campos (base e customizados)
+        fields = ('username', 'email', 'first_name', 'last_name', 'tipo_usuario',
+                  'data_nascimento', 'formacao', 'instituicao_atuante', 'lattes',
+                  'nome_instituicao', 'cnpj', 'endereco', 'contato', 'website')
+
     tipo_usuario = forms.ChoiceField(
         choices=[
             ('comum', 'Usuário Comum'),

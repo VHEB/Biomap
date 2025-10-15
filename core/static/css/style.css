@@ -430,6 +430,122 @@ section {
     margin-bottom: 30px;
 }
 
+.form-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh;
+}
+
+.form-container {
+    background: #fff;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+    max-width: 600px;
+    width: 100%;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+button.btn-primary {
+    width: 100%;
+    background: #007B5E;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button.btn-primary:hover {
+    background: #005f46;
+}
+
+.extra-fields {
+    display: none;
+    margin-top: 20px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+/* Estilos para validação em tempo real e erros */
+.password-check-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%; /* Centraliza verticalmente o ícone */
+    transform: translateY(-50%);
+    font-size: 1.2em;
+    pointer-events: none; /* Garante que não interfira no input */
+}
+
+.password-match-message {
+    font-size: 0.85em;
+    margin-top: 5px;
+    padding-left: 2px;
+}
+
+/* Cores dos ícones */
+.password-check-icon.success {
+    color: green;
+}
+
+.password-check-icon.error {
+    color: var(--alert-color, #D32F2F); 
+}
+
+/* O form-group da segunda senha precisa de position: relative para posicionar o ícone */
+#password2-group {
+    position: relative;
+}
+
+/* Estilo para erros de campo */
+.field-error {
+    color: var(--alert-color, #D32F2F);
+    font-size: 0.8em;
+    margin-top: 5px;
+    padding-left: 2px;
+}
+.error-message { /* Para erros que não são de campo específico */
+    background: #fdd;
+    border: 1px solid var(--alert-color, #D32F2F);
+    color: var(--alert-color, #D32F2F);
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+.help-text {
+    font-size: 0.8em;
+    color: #6c757d;
+    display: block;
+    margin-top: 5px;
+    padding-left: 2px;
+}
+
 
 /* LOGO */
 .logo {

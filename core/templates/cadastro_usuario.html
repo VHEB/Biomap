@@ -7,36 +7,55 @@
 
         <form method="post" novalidate>
             {% csrf_token %}
-            {{ form.non_field_errors }}
+            
+            {% if form.non_field_errors %}
+                <div class="error-message">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
 
             <div class="form-group">
                 <label for="{{ form.username.id_for_label }}">Usuário</label>
                 {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="field-error">{% for error in form.username.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
             </div>
 
             <div class="form-group">
                 <label for="{{ form.first_name.id_for_label }}">Nome</label>
                 {{ form.first_name }}
+                {% if form.first_name.errors %}
+                    <div class="field-error">{% for error in form.first_name.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
             </div>
 
             <div class="form-group">
                 <label for="{{ form.last_name.id_for_label }}">Sobrenome</label>
                 {{ form.last_name }}
+                {% if form.last_name.errors %}
+                    <div class="field-error">{% for error in form.last_name.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
             </div>
 
             <div class="form-group">
                 <label for="{{ form.email.id_for_label }}">E-mail</label>
                 {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="field-error">{% for error in form.email.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
             </div>
-
+            
             <div class="form-group">
                 <label for="{{ form.tipo_usuario.id_for_label }}">Tipo de Usuário</label>
                 {{ form.tipo_usuario }}
             </div>
 
-            <!-- CAMPOS PESQUISADOR -->
             <div class="extra-fields pesquisador">
                 <h4>Informações do Pesquisador</h4>
+                
                 <div class="form-group">
                     <label for="{{ form.data_nascimento.id_for_label }}">Data de Nascimento</label>
                     {{ form.data_nascimento }}
@@ -50,14 +69,14 @@
                     {{ form.instituicao_atuante }}
                 </div>
                 <div class="form-group">
-                    <label for="{{ form.lattes.id_for_label }}">Currículo Lattes</label>
+                    <label for="{{ form.lattes.id_for_label }}">Currículo Lattes (URL)</label>
                     {{ form.lattes }}
                 </div>
             </div>
 
-            <!-- CAMPOS INSTITUIÇÃO -->
             <div class="extra-fields instituicao">
                 <h4>Informações da Instituição</h4>
+                
                 <div class="form-group">
                     <label for="{{ form.nome_instituicao.id_for_label }}">Nome da Instituição</label>
                     {{ form.nome_instituicao }}
@@ -80,14 +99,37 @@
                 </div>
             </div>
 
-            <!-- SENHA -->
             <div class="form-group">
                 <label for="{{ form.password1.id_for_label }}">Senha</label>
                 {{ form.password1 }}
+                
+                {% if form.password1.help_text %}
+                    <small class="help-text">{{ form.password1.help_text|safe }}</small>
+                {% endif %}
+
+                {% if form.password1.errors %}
+                    <div class="field-error">
+                        {% for error in form.password1.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
-            <div class="form-group">
+
+            <div class="form-group" id="password2-group">
                 <label for="{{ form.password2.id_for_label }}">Confirmar Senha</label>
                 {{ form.password2 }}
+                
+                <span id="password-check-icon" class="password-check-icon"></span>
+                <p id="password-match-message" class="password-match-message"></p>
+                
+                {% if form.password2.errors %}
+                    <div class="field-error">
+                        {% for error in form.password2.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
             <button type="submit" class="btn-primary">Cadastrar</button>
@@ -99,73 +141,10 @@
     </div>
 </section>
 
-<style>
-.form-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 85vh;
-}
-
-.form-container {
-    background: #fff;
-    padding: 35px;
-    border-radius: 15px;
-    box-shadow: 0 3px 15px rgba(0,0,0,0.15);
-    max-width: 600px;
-    width: 100%;
-}
-
-h2 {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-label {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 5px;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
-}
-
-button.btn-primary {
-    width: 100%;
-    background: #007B5E;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-button.btn-primary:hover {
-    background: #005f46;
-}
-
-.extra-fields {
-    display: none;
-    margin-top: 20px;
-    padding: 10px;
-    background: #f9f9f9;
-    border-radius: 8px;
-}
-</style>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+    // 1. Lógica de toggle de campos (manter)
     const tipoSelect = document.getElementById("id_tipo_usuario");
     const pesquisadorFields = document.querySelector(".extra-fields.pesquisador");
     const instituicaoFields = document.querySelector(".extra-fields.instituicao");
@@ -176,8 +155,56 @@ document.addEventListener("DOMContentLoaded", function() {
         instituicaoFields.style.display = (tipo === "instituicao") ? "block" : "none";
     }
 
-    tipoSelect.addEventListener("change", toggleFields);
-    toggleFields(); // inicializa ao carregar
+    if (tipoSelect) {
+        tipoSelect.addEventListener("change", toggleFields);
+        toggleFields(); // Chama na inicialização para exibir os campos corretos
+    }
+
+    // 2. Lógica de Check-in de Senha (NOVA)
+    // Os IDs dos campos de senha do UserCreationForm são 'id_password' e 'id_password2'
+    const passwordInput = document.getElementById("id_password1");
+    const password2Input = document.getElementById("id_password2"); 
+    const checkIcon = document.getElementById("password-check-icon");
+    const message = document.getElementById("password-match-message");
+
+    if (passwordInput && password2Input) {
+        // Usa o 'input' event para verificar a cada digitação
+        [passwordInput, password2Input].forEach(input => {
+            input.addEventListener('input', checkPasswords);
+        });
+    }
+
+    function checkPasswords() {
+        const p1 = passwordInput.value;
+        const p2 = password2Input.value;
+
+        // Limpa tudo se ambos estiverem vazios
+        if (!p1 && !p2) {
+            checkIcon.innerHTML = '';
+            checkIcon.className = 'password-check-icon';
+            message.textContent = '';
+            return;
+        }
+
+        if (p1 === p2 && p1.length > 0) {
+            // Senhas coincidem
+            checkIcon.innerHTML = '&#10003;'; // Checkmark (✓)
+            checkIcon.className = 'password-check-icon success';
+            message.textContent = 'As senhas coincidem.';
+            message.style.color = 'green';
+        } else if (p2.length > 0) {
+            // Senhas não coincidem (e o segundo campo não está vazio)
+            checkIcon.innerHTML = '&#10007;'; // X mark (✗)
+            checkIcon.className = 'password-check-icon error';
+            message.textContent = 'As senhas não coincidem.';
+            message.style.color = 'var(--alert-color, #D32F2F)';
+        } else {
+            // Se o primeiro campo tem conteúdo e o segundo está vazio ou está sendo digitado
+            checkIcon.innerHTML = ''; 
+            checkIcon.className = 'password-check-icon';
+            message.textContent = '';
+        }
+    }
 });
 </script>
 {% endblock %}
