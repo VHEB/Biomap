@@ -94,7 +94,7 @@ section {
     width: 100%;
     margin: 0 auto;
     padding: 48px;
-    box-shadow: #0A0A0A;
+    box-shadow: var(--font-color);
 }
 
 /* === BARRA DE PESQUISA E DROPDOWN === */
@@ -133,7 +133,7 @@ section {
     left: 0;
     width: 100%;  /* 👈 garante mesma largura */
     z-index: 999;
-    background-color: #fff;
+    background-color: var(--background-color);
     border: 2px solid var(--primary-color);
     border-top: none; /* 👈 remove a linha dupla com o input */
     border-radius: 0 0 10px 10px; /* bordas inferiores arredondadas */
@@ -197,7 +197,7 @@ section {
 .animal-card {
     display: flex;
     align-items: flex-start;
-    background: #fff;
+    background: var(--background-color);
     border-radius: 10px;
     padding: 20px;
     margin: 20px 0;
@@ -219,7 +219,7 @@ section {
 .animal-info h3 {
     margin: 5px 0 15px;
     font-style: italic;
-    color: #555;
+    color: var(--font-color); /* Padronizado de #555 */
 }
 .animal-info p {
     margin: 4px 0;
@@ -238,20 +238,20 @@ section {
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-/* ===== Layout geral ===== */
+/* ===== Layout geral do Resultado ===== */
 .resultado-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 30px;
-    background: #f9fafc;
+    background: #f9fafc; /* Manter este cinza claro */
 }
 
-/* ===== Cartão principal (Imagem e Info) ===== */
+/* ===== Cartão principal (Imagem e Info) do Resultado ===== */
 .animal-card {
     display: flex;
     flex-wrap: wrap;
-    background: #fff;
+    background: var(--background-color);
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     overflow: hidden;
@@ -265,7 +265,7 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f3f3f3;
+    background: #f3f3f3; /* Manter cinza claro */
     padding: 20px;
 }
 
@@ -285,12 +285,12 @@ section {
 .animal-info h2 {
     font-size: 28px;
     margin-bottom: 5px;
-    color: #004d40;
+    color: var(--primary-color); /* Padronizado de #004d40 */
 }
 
 .animal-info h3 {
     font-size: 18px;
-    color: #00796b;
+    color: var(--primary-color); /* Padronizado de #00796b */
     margin-bottom: 15px;
 }
 
@@ -313,14 +313,14 @@ section {
     max-width: 700px;
     width: 100%;
     padding: 20px;
-    background: #fff;
+    background: var(--background-color);
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .mapa-container h4 {
     margin-bottom: 15px;
-    color: #004d40;
+    color: var(--primary-color); /* Padronizado de #004d40 */
     font-size: 1.5rem;
 }
 
@@ -336,7 +336,7 @@ section {
 .bioma-justificativa-container {
     width: 100%;
     max-width: 900px; 
-    background: #fff;
+    background: var(--background-color);
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
@@ -353,7 +353,7 @@ section {
     display: block;
     margin-bottom: 10px;
     font-size: 1.1em;
-    color: #004d40;
+    color: var(--primary-color); /* Padronizado de #004d40 */
 }
 
 .bioma-tag {
@@ -363,7 +363,7 @@ section {
     border-radius: 20px; 
     font-size: 14px;
     font-weight: bold;
-    color: white;
+    color: var(--background-color); /* Padronizado de white */
     text-shadow: 0 1px 1px rgba(0,0,0,0.2);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -373,8 +373,8 @@ section {
     line-height: 1.5;
 }
 
-/* ===== Cores dos Biomas (Estilização de Círculos) ===== */
-/* Os nomes das classes (ex: .cerrado) são gerados pelo filtro |slugify */
+/* ===== Cores dos Biomas (Estilização de Círculos) - MANTIDOS COMO ESTÃO ===== */
+/* Estes precisam de cores específicas, por isso não usam as variáveis primárias */
 .cerrado {
     background-color: #ffd700; 
     color: #333; 
@@ -401,8 +401,8 @@ section {
 
 /* ===== Botão e Mensagens ===== */
 .btn-search {
-    background: #00796b;
-    color: white;
+    background: var(--primary-color); /* Padronizado de #00796b */
+    color: var(--background-color); /* Padronizado de white */
     padding: 12px 24px;
     border-radius: 8px;
     text-decoration: none;
@@ -412,7 +412,7 @@ section {
 }
 
 .btn-search:hover {
-    background: #004d40;
+    background: #184437; /* Tonalidade escura para o hover de primary */
 }
 
 .no-result {
@@ -430,59 +430,78 @@ section {
     margin-bottom: 30px;
 }
 
+/* ======================================= */
+/* === ESTILOS DE FORMULÁRIO (LOGIN/EDITAR) === */
+/* ======================================= */
+
 .form-section {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 85vh;
+    padding: 40px 20px; /* Adiciona padding para telas pequenas */
 }
 
 .form-container {
-    background: #fff;
+    background: var(--background-color); /* Padronizado de #fff */
     padding: 35px;
     border-radius: 15px;
     box-shadow: 0 3px 15px rgba(0,0,0,0.15);
-    max-width: 600px;
+    max-width: 450px; /* Reduzindo a largura máxima para Login/Editar */
     width: 100%;
 }
 
-h2 {
+.form-container h2 {
     text-align: center;
     margin-bottom: 25px;
+    color: var(--primary-color);
 }
 
 .form-group {
     margin-bottom: 15px;
+    position: relative;
 }
 
-label {
+.form-group label {
     font-weight: 600;
     display: block;
     margin-bottom: 5px;
 }
 
-input, select, textarea {
+/* Padronizando inputs */
+input:not([type="checkbox"]), 
+select, 
+textarea {
     width: 100%;
-    padding: 8px;
+    padding: 10px; /* Aumentado o padding para melhor UX */
     border: 1px solid #ccc;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: var(--font-size-p);
+    box-sizing: border-box; /* Garante que padding não aumente o tamanho */
+}
+
+input:focus, 
+select:focus, 
+textarea:focus {
+    border-color: var(--secondary-color);
+    outline: none;
 }
 
 button.btn-primary {
     width: 100%;
-    background: #007B5E;
-    color: #fff;
+    background: var(--primary-color); /* Padronizado de #007B5E */
+    color: var(--background-color); /* Padronizado de #fff */
     border: none;
-    padding: 10px;
+    padding: 12px; /* Aumentado o padding */
     border-radius: 8px;
-    font-size: 16px;
+    font-size: var(--font-size-h5);
     cursor: pointer;
     transition: 0.2s;
+    margin-top: 15px; /* Adicionado margem superior */
 }
 
 button.btn-primary:hover {
-    background: #005f46;
+    background: #184437; /* Tonalidade escura para o hover de primary */
 }
 
 .extra-fields {
@@ -497,10 +516,10 @@ button.btn-primary:hover {
 .password-check-icon {
     position: absolute;
     right: 15px;
-    top: 50%; /* Centraliza verticalmente o ícone */
+    top: 50%; 
     transform: translateY(-50%);
     font-size: 1.2em;
-    pointer-events: none; /* Garante que não interfira no input */
+    pointer-events: none; 
 }
 
 .password-match-message {
@@ -511,11 +530,11 @@ button.btn-primary:hover {
 
 /* Cores dos ícones */
 .password-check-icon.success {
-    color: green;
+    color: green; /* Manter green para checkmark, pois não há variável para isso */
 }
 
 .password-check-icon.error {
-    color: var(--alert-color, #D32F2F); 
+    color: var(--alert-color); /* Padronizado de var(--alert-color, #D32F2F) */
 }
 
 /* O form-group da segunda senha precisa de position: relative para posicionar o ícone */
@@ -525,22 +544,22 @@ button.btn-primary:hover {
 
 /* Estilo para erros de campo */
 .field-error {
-    color: var(--alert-color, #D32F2F);
-    font-size: 0.8em;
+    color: var(--alert-color); /* Padronizado de var(--alert-color, #D32F2F) */
+    font-size: var(--font-size-small);
     margin-top: 5px;
     padding-left: 2px;
 }
 .error-message { /* Para erros que não são de campo específico */
-    background: #fdd;
-    border: 1px solid var(--alert-color, #D32F2F);
-    color: var(--alert-color, #D32F2F);
+    background: #ffe3e3; /* Tonalidade clara do alerta */
+    border: 1px solid var(--alert-color); /* Padronizado de var(--alert-color, #D32F2F) */
+    color: var(--alert-color); /* Padronizado de var(--alert-color, #D32F2F) */
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 5px;
 }
 .help-text {
-    font-size: 0.8em;
-    color: #6c757d;
+    font-size: var(--font-size-small);
+    color: #6c757d; /* Mantido cinza para contraste suave */
     display: block;
     margin-top: 5px;
     padding-left: 2px;

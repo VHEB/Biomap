@@ -1,17 +1,35 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Login</h2>
+<section class="form-section">
+    <div class="form-container">
+        <h2>Login</h2>
 
-    {% if form.errors %}
-        <p style="color: red;">Usuário ou senha inválidos.</p>
-    {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                <div class="error-message">
+                    <p>Usuário ou senha inválidos. Por favor, tente novamente.</p>
+                </div>
+            {% endif %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Entrar</button>
-    </form>
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Usuário ou E-mail</label>
+                {{ form.username }}
+            </div>
 
-    <p>Ainda não tem uma conta? <a href="{% url 'cadastro_usuario' %}">Cadastre-se</a></p>
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">Senha</label>
+                {{ form.password }}
+            </div>
+
+            <button type="submit" class="btn-primary">Entrar</button>
+        </form>
+
+        <p class="text-center">
+            Ainda não tem uma conta? <a href="{% url 'cadastro_usuario' %}">Cadastre-se</a>
+        </p>
+    </div>
+</section>
 {% endblock %}
